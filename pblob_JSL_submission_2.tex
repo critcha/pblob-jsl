@@ -116,7 +116,8 @@ These results have implications for the game theory of bounded agents who are ab
 \end{abstract}
 
 \section{Introduction}\label{sec:bo}
-Since the main results of this paper hinge on proving a generalization of L\"{o}b's theorem, we begin by recalling L\"{o}b's Theorem itself in this introduction, and briefly discussing why a version of the theorem for logical proof systems with bounded computational resources is particularly interesting.   Sections 2 through 5 are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections 6 and 7 explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
+Since the main results of this paper hinge on proving a generalization of L\"{o}b's theorem, we begin by recalling L\"{o}b's Theorem itself in this introduction, and briefly discussing why a version of the theorem for logical proof systems with bounded computational resources is particularly interesting.   
+Sections \ref{sec:fund} through \ref{sec:fund} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:pbob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
 
 %The arc of this paper begins and ends with a discussion of the Prisoner's Dilemma, but it passes through a new result in provability logic.  Thus, it will hopefully be of interest to game theorists and logicians alike.
 %
@@ -233,7 +234,7 @@ Suppose $p(-)$ is a logical formula with a single unquantified variable, and tha
 
 
 
-\section{Fundamentals}
+\section{Fundamentals}\label{sec:fund}
 
 \subsection{Proof Length and Notation}
 If the first line of a three-line proof is so long that it would not fit on any physical computer system, saying the proof is ``only three lines long'' is not very descriptive.  Therefore, we will measure proof length in {\em characters} instead of lines, the way one might measure the size of a text file on a computer.  An extensive analysis of proof lengths measured in characters is covered by Pudl\'{a}k~\cite{Pudlak:1998}.
@@ -364,7 +365,7 @@ $$\proves{} \forall \bar k\; \psi(\bar k) \iff G(\qquote{\psi},\bar k)$$
 
 \end{proof}
 
-\section{A Bounded Provability Predicate, \texorpdfstring{$\bx{k}$}{box k}}
+\section{A Bounded Provability Predicate, \texorpdfstring{$\bx{k}$}{box k}} \label{sec:bpp}
 \subsection{Defining \texorpdfstring{$\bx{k}$}{box k}}
 Given a choice of G\"{o}del encoding for Peano Arithmetic, it is classical that a predicate $Bew(-,-) \in \Lang_2(S)$ exists such that $Bew(m,n)$ means, in natural language, that the number $m$ encodes a proof in $\PA$, and that the number $n$ encodes the statement it proves.  So, the standard provability operator $\bx{}:\Lang(\PA)\to\Lang(\PA)$ can be defined as
 $$\bx{}\phi := \exists m : Bew(m,\qquote\phi).$$
@@ -512,6 +513,7 @@ as required.
 
 
 \section{Application: Robust Cooperation of Bounded Agents in the Prisoner's Dilemma}
+\label{sec:robucoop}
 
 B\'{a}r\'{a}sz, LaVictoire and others~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have exhibited various proof-based agents who robustly cooperate in the Prisoner's Dilemma by basing their decisions on proofs about each others' cooperation.  However, their agents are purely logical entities which can discover proofs of unbounded length, and so are impossible to run on a physical computer.  This leaves open the question of whether such behavior is achievable by agents with bounded computational resources.
 
@@ -621,7 +623,8 @@ $$A_m(B_n)=B_n(A_m)=Cooperate.$$
 \end{proof}
 
 \section{An Obstacle to Logical Self-Trust}
-L\"{o}b's Theorem can be viewed as an obstacle to a formal system of logic ``trusting itself'' to soundly prove any statement $p$.  Intuitively, we might like it if a system could ``trust itself about $p$" by proving that "If I prove $p$, then $p$ is true."  But this is just the hypothesis $\proves{} \bx{}p \implies p$ of L\"{o}b's Theorem, whence the conclusion $\bx{}p$ follows, which is undesirable (makes our system unsound) if $p$ turns out to actually be false.
+\label{sec:selftrust}
+L\"{o}b's Theorem can be viewed as an obstacle to a formal system of logic ``trusting itself'' to soundly prove any statement $p$.  Intuitively, we might like it if a system could ``trust itself about $p$" by proving that ``If I prove $p$, then $p$ is true."  But this is just the hypothesis $\proves{} \bx{}p \implies p$ of L\"{o}b's Theorem, whence the conclusion $\bx{}p$ follows, which is undesirable (makes our system unsound) if $p$ turns out to actually be false.
 
 Previously, one might have thought this obstacle was merely a quirk of infinities arising from the the unbounded proof-existence predicate $\bx{}$.  However, we see now that some bounded obstacle remains: namely, that a bounded logical system cannot trust itself ``about moderately long proofs in general".  To see this interpretation, let $p(k)$ be any statement with a free parameter $k$, and $f(k) \succ \lg(k)$ be any function, representing ``moderate largeness''.  Then the hypothesis $\proves{} \forall k, \bx{f(k)} p(k) \implies p(k)$ of Parametric Bounded L\"{o}b's Theorem says that our logical system generally trusts its proofs about $p(k)$, even if they are moderately long.  However, this will imply that $\proves{} \forall k > \hat k, p(k)$, which is bad news if $p(k)$ is sometimes false.
 
