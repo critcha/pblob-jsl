@@ -34,6 +34,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem*{theorem*}{Theorem}
 \newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
 %\newtheorem{temptingclaim}[theorem]{False But Temping Claim}
 \newtheorem{property}{Property}
 \newtheorem{corollary}[theorem]{Corollary}
@@ -90,7 +91,7 @@
 \maketitle
 
 \begin{abstract}
-L\"{o}b's Theorem makes predictions about the behavior of self-reflective systems with unbounded computational resources with which to write and evaluate proofs.  However, in the real world, self-reflective systems will have limited memory and processing speed, so in this paper we introduce a bounded version of L\"{o}b's Theorem which is applicable given such resource limitations.  
+L\"{o}b's Theorem makes predictions about the behavior of self-reflective systems with unbounded computational resources with which to write and evaluate proofs.  However, in the real world, self-reflective systems will have limited memory and processing speed, so this paper introduces a bounded version of L\"{o}b's Theorem which is applicable given such resource limitations.  
 These results have implications for the game theory of bounded agents who are able to write proofs about themselves and one another, including the capacity to out-perform classical Nash equilibria and correlated equilibria, attaining mutually cooperative program equilibrium in the Prisoner's Dilemma.
 \end{abstract}
 
@@ -108,7 +109,7 @@ Some need has already arisen for a resource-bounded version of L\"{o}b's theorem
 
 Previous work of Pudl\'{a}k~\cite{Pudlak:1998} on provability of finitistic consistency statements were suggestive that such a result might be possible
 
-\bred{elaborate}, and in fact we prove here a version that suits both of the above use cases:
+\bred{elaborate}, and in fact this paper proves a version that suits both of the above use cases:
 
 \begin{theorem*}[Parametric Bounded L\"{o}b]
 Suppose $p(-)$ is a logical formula with a single unquantified variable, and that $f:\NN \to \NN$ is computable and  exceeds a certain asymptotic lower bound.  Then $\exists\hat k$ :
@@ -118,23 +119,22 @@ Suppose $p(-)$ is a logical formula with a single unquantified variable, and tha
 \end{align*}
 \end{theorem*}
 
-Sections \ref{sec:fund} through \ref{sec:fund} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:pbob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
+\paragraph{Outline.} Sections \ref{sec:fund} through \ref{sec:bpp} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:pblob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
 
 \section{Fundamentals}\label{sec:fund}
 
 Since this paper draws from work in several disciplines, this section is provided to clarify the use of notation and conventions throughout.
 
 \paragraph{Proof length conventions and notation.}
-If the first line of a three-line proof is so long that it would not fit on any physical computer system, saying the proof is ``only three lines long'' is not very descriptive.  Therefore, we will measure proof length in {\em characters} instead of lines, the way one might measure the size of a text file on a computer.  An extensive analysis of proof lengths measured in characters is covered by Pudl\'{a}k~\cite{Pudlak:1998}.
+If the first line of a three-line proof is so long that it would not fit on any physical computer system, saying the proof is ``only three lines long'' is not very descriptive.  Therefore, proof length will be measured in {\em characters} instead of lines, the way one might measure the size of a text file on a computer.  An extensive analysis of proof lengths measured in characters is covered by Pudl\'{a}k~\cite{Pudlak:1998}.
 
-We will fix a proof system $S$ (e.g. an extension of Peano Arithmetic) throughout, and write
+Throughout this paper, $S$ refers to a fixed proof system (e.g. an extension of Peano Arithmetic).  Writing
 $$S \proves{n} \phi, \quad \text{or simply} \quad \proves{n} \phi$$
-to mean that there exists an $S$-proof of $\phi$ using $n$ or fewer characters.  
-
+means that there exists an $S$-proof of $\phi$ using $n$ or fewer characters.  
 
 \paragraph{Proof system.}
 \label{sec:system}
-We let $S$ be any first-order proof system that
+Let $S$ be any first-order proof system that
 \begin{itemize}
 \item[1)] can represent computable functions in the sense of Section \ref{sec:rep},
 \item[2)] can write any number $k\in\NN$ using $\Oo(\lg k)$ symbols, and 
@@ -151,9 +151,9 @@ and additionally allow ourselves to write numbers in a binary format, and allow 
 \end{itemize}
 For concreteness, an illustration of a proof using abbreviations is given in the Appendix.
 
-\noindent We have chosen to allow abbreviations in our proof system for two reasons.  The first is that real-world automated proof systems will tend to use abbreviations because of memory constraints.  The second is that abbreviations make the lengths of shortest-proofs in this system slightly easier to analyze.  For example, if a number $N$ with a very large number of digits occurs in the shortest proof of a proposition, it will not occur multiple times; instead, it will occur only once, in the definition of an abbreviation for it.  Then, we don't have to carefully count the number of times the numeral occurs in the proof to determine its contribution to the proof length; its contribution will simply be linear in its length, or $\lg N$.
+\noindent Abbreviations are allowed in the proof system for two reasons.  The first is that real-world automated proof systems will tend to use abbreviations because of memory constraints.  The second is that abbreviations make the lengths of shortest-proofs in this system slightly easier to analyze.  For example, if a number $N$ with a very large number of digits occurs in the shortest proof of a proposition, it will not occur multiple times; instead, it will occur only once, in the definition of an abbreviation for it.  Then, one does not need to carefully count the number of times the numeral occurs in the proof to determine its contribution to the proof length; its contribution will simply be linear in its length, or $\lg N$.
 
-We write 
+Write 
 \begin{itemize}
 \item[] $\Lang(S)$ for the language of $S$,
 \item[] $\Lang_r(S)$ for the formulas in $\Lang(S)$ with $r$ free variables, and 
@@ -161,11 +161,11 @@ We write
 \end{itemize}
 
 \paragraph{Choosing a G\"{o}del encoding.}
-We fix throughout a G\"{o}del numbering
+Along with the proof system $S$, a single G\"{o}del
  $$\#(-) : \Lang(S) \to \NN$$
-and a ``numeral'' mapping
+is chosen and fixed throughout, as well as ``numeral'' mapping
 $$\numeral(-) : \NN \to \Const(S)\subseteq \Lang(S)$$
-for expressing naturals as constants in $S$.  Note that in traditional $\PA$, for example, $\numeral 5 = \Ss\Ss\Ss\Ss\Ss0$.  However, to be more realistic we have assumed that $S$ uses a binary encoding to be more efficient, so e.g.,
+for expressing naturals as constants in $S$.  Note that in traditional $\PA$, for example, $\numeral 5 = \Ss\Ss\Ss\Ss\Ss0$.  However, to be more realistic it is assumed that $S$ uses a binary encoding to be more efficient, so e.g.,
 $$\numeral 5 = 101.$$
 The maps $\#(-)$ and $\numeral(-)$ combine to form a G\"{o}del encoding
 $$\qquote{(-)} : \Lang(S)\to\Const(S)$$
@@ -177,75 +177,40 @@ It is known (see, e.g.\ Theorem 6.8 of Cori and Lascar, Part II~\cite{Cori:2001}
 %
 $$\forall x\in\NN, \; \PA \proves{} \forall y, \; \Gamma_f(\numeral x,y) \iff y = \numeral f(x)$$
 
-\noindent We have assumed that $S$ is capable of representing computable functions in this way (e.g., by being an extension of $\PA$).
+\noindent It is assumed that $S$ is capable of representing computable functions in this way (e.g., by being an extension of $\PA$).
 
-The two-place predicates $\Gamma_f$ are cumbersome in writing because each usage introduces a quantifier.  For example, if we we have functions $f$, $g$ and $h$ and we want to say that $S$ proves that for any $x$ value, $f(x) < g(x) + h(x)$, technically we should write
+The two-place predicates $\Gamma_f$ are cumbersome in writing because each usage introduces a quantifier.  For example, given functions $f$, $g$ and $h$, to say that $S$ proves that for any $x$ value, $f(x) < g(x) + h(x)$, technically one should write
 %
 $$\proves{} \forall x \forall y_1 \forall y_1 \forall y_3,\; \Gamma_f(x,y_1) \AND \Gamma_g(x,y_2)\AND \Gamma_h(x,y_3) \implies y_1 < y_2 + y_3$$
 %
-However, for easier reading, in such cases we will abuse notation and write
+However, for easier reading, in such cases one can abuse notation and write
 $$\proves{} \forall x, \; f(x) < g(x) + h(x),$$
 leaving the expansion in terms of $\Gamma$'s and $\forall y$'s to the reader.
 
 \paragraph{Asymptotic Notation.}
-We use the convention that $f \prec g$ means that for any $M\in \NN$, there exists and $N\in\NN$ such that $\forall n>N, Mf(n) < g(n)$.  We write $\Oo(g)$ for the set of functions $f\preceq g$, and for a specific function $\Ee$ we will sometimes write write $\Ee(\Oo(g))$ for the set of functions of the form $\Ee \circ f$ where $f\in \Oo(g)$.
-
-\section{Inspiration: a modal proof of L\"{o}b's Theorem}
-
-The proof of our bounded version of L\"{o}b's Theorem was inspired by a particular proof of L\"{o}b's original theorem using a few simple properties of $\Box$, along with the classical Diagonal Lemma~\cite{Carnap:1934}.\footnote{Thanks to Professor Leo Harrington for the advice to include this proof, taken from Wikipedia, as a way of motivating the remainder of the paper.}
-
-\begin{itemize}
-\item {\bf Necessitation:} From $\vdash A$ conclude $\vdash \Box A$: Informally, this says that if A is a theorem, then it is provable.
-\item {\bf Internal necessitation:} $\vdash \Box A \rightarrow \Box \Box A$: If A is provable, then it is provable that it is provable.
-\item {\bf Box distributivity:} $\vdash \Box (A \rightarrow B) \rightarrow (\Box A \rightarrow \Box B)$:  This rule allows applications of modus ponens inside the provability operator. If it is provable that A implies B, and A is provable, then B is provable.
-\item {\bf Diagonal Lemma:} for any formula $F(-)\in\Lang_1(S)$ (having one free variable), there exists a sentence $\psi\in\Lang_0(S)$ (with no free variables) such that $$\proves{} \psi \iff F(\qquote\psi).$$  
-\end{itemize}
-
-\begin{proof}[Proof of L\"{o}b's Theorem:]\ 
-
-\begin{enumerate}
-\item Suppose $\vdash \Box p \rightarrow p$.
-
-Define $F(x) \in \Lang_1(\PA)$ by $F(\qquote\psi) = (\Box \psi \rightarrow p)$ for any $\psi \in \Lang_0(\PA)$ and $F(x) = 0$ otherwise.  From the Diagonal Lemma, $F$ has a fixed point $\psi$:
-
-\item $\vdash \psi \leftrightarrow (\Box \psi \rightarrow p)$.  In particular, we have the forward implication:
-\item $\vdash \psi \rightarrow (\Box \psi \rightarrow p)$.  By the necessitation rule:
-\item $\vdash \Box(\psi \rightarrow (\Box \psi \rightarrow p))$.  By the box distributivity rule:
-\item $\vdash \Box\psi \rightarrow \Box(\Box \psi \rightarrow p)$.  Box distributivity with $ A = \Box \psi $ and $ B= p$ gives:
-\item $\vdash \Box(\Box \psi \rightarrow p) \rightarrow (\Box\Box\psi \rightarrow \Box p)$.  From this and 5 we have:
-\item $\vdash \Box \psi \rightarrow (\Box\Box\psi \rightarrow \Box p)$.  By the internal necessitation rule:
-\item $\vdash \Box \psi \rightarrow \Box \Box \psi$.  From this and 7:
-\item $\vdash \Box \psi \rightarrow \Box p$.  From this and 1:
-\item $\vdash \Box \psi \rightarrow p$.  From 2:
-\item $\vdash (\Box \psi \rightarrow p) \rightarrow \psi$.  From this and 10:
-\item $\vdash \psi$.  Thus, by the necessitation rule:
-\item $\vdash \Box \psi$.  Finally, from this and 10 we have:
-\item $\vdash p$.
-\end{enumerate}
-
-\end{proof}
+The notation $f \prec g$ will mean that for any $M\in \NN$, there exists and $N\in\NN$ such that $\forall n>N, Mf(n) < g(n)$.  The expression $\Oo(g)$ stands for the set of functions $f\preceq g$, and for any specific function $\Ee$, $\Ee(\Oo(g))$ will stand for the set of functions of the form $\Ee \circ f$ where $f\in \Oo(g)$.
 
 \section{A Parametric Diagonal Lemma}
-To reason about computer systems with certain as-yet unset parameters, such as memory constraints, we will need a generalization of the Diagonal Lemma for formulas with free variables to represent those parameters in a way that avoids writing a separate proof for every instance of the parameters.
+To reason about computer systems with certain as-yet unset parameters, such as memory constraints, a generalization of the Diagonal Lemma is needed for formulas with free variables to represent those parameters in a way that avoids writing a separate proof for every instance of the parameters.
 
-\begin{proposition}[Parametric Diagonal Lemma]Suppose $S$ is a first-order theory capable of representing all computable functions, as in Section \ref{sec:rep}.  Then for any predicate $G\in\Lang_{r+1}(S)$, there exists a predicate $\psi\in\Lang_r(S)$ such that: \\
+\begin{lemma}[Parametric Diagonal Lemma] Suppose $S$ is a first-order theory capable of representing all computable functions, as in Section \ref{sec:rep}.  Then for any predicate $G\in\Lang_{r+1}(S)$, there exists a predicate $\psi\in\Lang_r(S)$ such that: \\
 $$\proves{} \forall \bar k = (k_1,\ldots,k_r), \; \psi(\bar k) \iff G(\qquote\psi,\bar k)$$
-\end{proposition}
+\end{lemma}
 
-Since the first draft of this paper, it has been pointed out\footnote{Thanks to Professor Dana Scott.} that this result can be found on p. 53 of \cite{Boolos:1993:Logic}.  However, since the proof exposited here is quite short, and simpler to follow in the context of this paper, we decided to keep it here for the purpose of self-containment:
+Since the first draft of this paper, it has been pointed out\footnote{Thanks to Professor Dana Scott.} that this result can be found on p. 53 of \cite{Boolos:1993:Logic}.  However, since the proof exposited here is quite short, and simpler to follow in the context of this paper, is it kept here for the purpose of self-containment:
 
 \begin{proof}
-We define a ``partial self-evaluation function'' $e:\NN\to\NN$ as follows: 
+Define a ``partial self-evaluation function'' $e:\NN\to\NN$ as follows: 
 $$e(n) = \begin{cases} 
 \#\left[\theta(\qquote\theta,-,\ldots,-)\right] &\mbox{if } n = \#\theta \text{ for some }\theta\in\Lang_{r+1}(S) \\ 
 0 & \mbox{otherwise }
 \end{cases}
 $$
-Now, $e$ is computable, and therefore representable in $\Lang(S)$, so we can define $\beta\in\Lang_{r+1}(S)$ by 
+Now, $e$ is computable, and therefore representable in $\Lang(S)$, define $\beta\in\Lang_{r+1}(S)$ by 
 $$\beta(n,\bar k) := G(e(n),\bar k)$$ 
 (using the notational convention of Section \ref{sec:rep} to avoid writing extra quantifiers and $\Gamma_e$'s).  Then, $\forall \theta\in\Lang_{r+1}(S)$,
 $$\proves{} \forall \bar k\; \beta(\qquote{\theta},\bar k) \iff G(\qquote{\theta(\qquote{\theta},-,\ldots,-)},\bar k)$$
-Now let $\theta = \beta$, so we have
+Now let $\theta = \beta$, so that
 $$\proves{} \forall \bar k\; \beta(\qquote(\beta),\bar k) \iff G(\qquote{\beta(\qquote{\beta},-,\ldots,-)},\bar k)$$
 %
 Finally, taking $\psi(\bar k) = \beta(\qquote{\beta},\bar k)$ yields the desired result
@@ -258,7 +223,7 @@ $$\proves{} \forall \bar k\; \psi(\bar k) \iff G(\qquote{\psi},\bar k)$$
 \subsection{Defining \texorpdfstring{$\bx{k}$}{box k}}
 Given a choice of G\"{o}del encoding for Peano Arithmetic, it is classical that a predicate $Bew(-,-) \in \Lang_2(S)$ exists such that $Bew(m,n)$ means, in natural language, that the number $m$ encodes a proof in $\PA$, and that the number $n$ encodes the statement it proves.  So, the standard provability operator $\bx{}:\Lang(\PA)\to\Lang(\PA)$ can be defined as
 $$\bx{}\phi := \exists m : Bew(m,\qquote\phi).$$
-We take for granted that $Bew$ exists for $S$ and can be extended to a three-place predicate $Bew(-,-,-) \in \Lang_2(S)$ such that $Bew(m,n,k)$ means that 
+It is taken for granted that $Bew$ exists for $S$ and can be extended to a three-place predicate $Bew(-,-,-) \in \Lang_2(S)$ such that $Bew(m,n,k)$ means that 
 
 \begin{itemize}
 \item $m$ encodes a proof in $S$,
@@ -266,9 +231,9 @@ We take for granted that $Bew$ exists for $S$ and can be extended to a three-pla
 \item the proof encoded by $m$ uses at most $k$ characters when written in the language of $S$ ({\em not} when written using the encoding.)
 \end{itemize}
 %
-Then we can define a ``bounded'' box operator:
+Then one can define a ``bounded'' box operator:
 $$\bx{k}\phi = \exists m : Bew(m,\qquote{\phi},k).$$
-We also take for granted a computable ``single variable evaluation'' function, $Eval_1:\NN\to\NN$, such that for any $\phi(-)\in\Lang_1(S)$, 
+It is also taken for granted a computable ``single variable evaluation'' function, $Eval_1:\NN\to\NN$, such that for any $\phi(-)\in\Lang_1(S)$, 
 $$Eval_1(\qquote\phi,k) = \qquote{\phi(\numeral k)}$$
 Since $Eval_1$ is computable, it can be represented in $\Lang(S)$ as in Section \ref{sec:rep}.  
 This allows us to extend the $\bx{k}$ operator to act on sentences $\phi(-)$ with an unbound variable:
@@ -278,7 +243,7 @@ $$(\bx{k}\phi)(\ell) := \exists m : Bew(m,Eval_1(\qquote\phi,\ell),k)$$
 In words, ``There is a proof using $k$ or fewer characters of the formula $\phi(\ell)$''.
 
 \subsection{Basic Properties of \texorpdfstring{$\bx{k}$}{box k}}
-Each of the following properties will be needed multiple times during the proof of Parametric Bounded L\"{o}b.  Since the proof is already highly symbolic, we give these properties English names to recall them. 
+Each of the following properties will be needed multiple times during the proof of Parametric Bounded L\"{o}b.  Since the proof is already highly symbolic, these properties are given English names to recall them. 
 
 \begin{property}[Implication Distribution]
 There is a constant $c\in \Const(S)$ such that for any $p,q\in\Lang(S)$,
@@ -286,7 +251,7 @@ $$\proves{} \forall a\forall b,\; \bx{a}(p\implies q) \implies (\bx{b}p \implies
 \end{property}
 
 \begin{proof}[Proof sketch]
-The fact that one can combine a proof of an implication with the proof of its antecedent to obtain a proof of its consequent can be proven in general, with quantified variables in place of the G\"{o}del numbers of the particular statements involved.  Let us suppose this general proof has length $c_0$.  Then, we need only instantiate the statements in it to $p$ and $q$.  However, if $p$ and $q$ are long expressions, they can have been abbreviated in the earlier proofs without lengthening them, so they can be written in abbreviated form again during this step.  Hence, the total cost of combining the two proofs is around $c=2c_0$, which is constant with respect to $p$ and $q$.
+The fact that one can combine a proof of an implication with the proof of its antecedent to obtain a proof of its consequent can be proven in general, with quantified variables in place of the G\"{o}del numbers of the particular statements involved.  Let us suppose this general proof has length $c_0$.  Then, one needs only to instantiate the statements in it to $p$ and $q$.  However, if $p$ and $q$ are long expressions, they can have been abbreviated in the earlier proofs without lengthening them, so they can be written in abbreviated form again during this step.  Hence, the total cost of combining the two proofs is around $c=2c_0$, which is constant with respect to $p$ and $q$.
 \end{proof}
 
 \begin{property}[Quantifier Distribution]
@@ -299,12 +264,12 @@ There is a constant $C\in \Const(S)$ such that for any $\phi(-) \in \Lang_1(S)$,
 \end{property}
 
 \begin{proof}
-An encoded proof of $\phi(\numeral K)$ for a specific $K$ can be obtained by specializing the conclusion of an $N$-character encoded proof of $\forall k \phi(k)$ and appending the specialization with $\numeral K$ in place of $k$ at the end.  To avoid repeating $\numeral K$ numerous times in the final line (in case it is large), we will use an abbreviation for $\phi$.  Thus the appended lines can say:
+An encoded proof of $\phi(\numeral K)$ for a specific $K$ can be obtained by specializing the conclusion of an $N$-character encoded proof of $\forall k \phi(k)$ and appending the specialization with $\numeral K$ in place of $k$ at the end.  To avoid repeating $\numeral K$ numerous times in the final line (in case it is large), an abbreviation will be used for $\phi$.  Thus the appended lines can say:
 \begin{itemize}
 \item[(1)] let $\Phi$ stand for $\qquote{\phi}$
 \item[(2)] $\Phi(\numeral K)$
 \end{itemize}
-Let us analyze how many characters are needed to write such lines.  First, we need a string $\Phi$ to use as an abbreviation for $\phi$.  Since no string of length $\frac{N}{2}$ has yet been used as an abbreviation in the earlier proof (otherwise we can shorten the proof by not defining and using the abbreviation), we can surely have $\mathrm{Length}(\Phi)<\frac{N}{2}$.  We also need some constant $c$ number of characters to write out the system's equivalent of ``let'', ``stand for'', ``('', and ``)''.  Finally, we need $\lg K$ characters to write $\numeral K$.  Altogether, the proof was extended by $C+N+\lg(k)$ characters, for a total length of $2N+c+\lg k$.  
+Let us analyze how many characters are needed to write such lines.  First, a string $\Phi$ is needed to use as an abbreviation for $\phi$.  Since no string of length $\frac{N}{2}$ has yet been used as an abbreviation in the earlier proof (otherwise one can shorten the proof by not defining and using the abbreviation), we can surely have $\mathrm{Length}(\Phi)<\frac{N}{2}$.  We also need some constant $c$ number of characters to write out the system's equivalent of ``let'', ``stand for'', ``('', and ``)''.  Finally, we need $\lg K$ characters to write $\numeral K$.  Altogether, the proof was extended by $C+N+\lg(k)$ characters, for a total length of $2N+c+\lg k$.  
 \end{proof}
 
 \section{Parametric Bounded L\"{o}b}\label{sec:blob}
@@ -401,7 +366,14 @@ as required.
 \end{proof}
 
 
-\section{Application: Robust Cooperation of Bounded Agents in the Prisoner's Dilemma}
+\section{Applications}
+\subsection{An Obstacle to Logical Self-Trust}
+\label{sec:selftrust}
+L\"{o}b's Theorem can be viewed as an obstacle to a formal system of logic ``trusting itself'' to soundly prove any statement $p$.  Intuitively, we might like it if a system could ``trust itself about $p$" by proving that ``If I prove $p$, then $p$ is true."  But this is just the hypothesis $\proves{} \bx{}p \implies p$ of L\"{o}b's Theorem, whence the conclusion $\bx{}p$ follows, which is undesirable (makes our system unsound) if $p$ turns out to actually be false.
+
+Previously, one might have thought this obstacle was merely a quirk of infinities arising from the the unbounded proof-existence predicate $\bx{}$.  However, we see now that some bounded obstacle remains: namely, that a bounded logical system cannot trust itself ``about moderately long proofs in general".  To see this interpretation, let $p(k)$ be any statement with a free parameter $k$, and $f(k) \succ \lg(k)$ be any function, representing ``moderate largeness''.  Then the hypothesis $\proves{} \forall k, \bx{f(k)} p(k) \implies p(k)$ of Parametric Bounded L\"{o}b's Theorem says that our logical system generally trusts its proofs about $p(k)$, even if they are moderately long.  However, this will imply that $\proves{} \forall k > \hat k, p(k)$, which is bad news if $p(k)$ is sometimes false.
+
+\subsection{Application: Robust Cooperation of Bounded Agents in the Prisoner's Dilemma}
 \label{sec:robucoop}
 
 B\'{a}r\'{a}sz, LaVictoire and others~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have exhibited various proof-based agents who robustly cooperate in the Prisoner's Dilemma by basing their decisions on proofs about each others' cooperation.  However, their agents are purely logical entities which can discover proofs of unbounded length, and so are impossible to run on a physical computer.  This leaves open the question of whether such behavior is achievable by agents with bounded computational resources.
@@ -511,18 +483,51 @@ In other words, for all $m,n>\hat k + 1$,
 $$A_m(B_n)=B_n(A_m)=Cooperate.$$
 \end{proof}
 
-\section{An Obstacle to Logical Self-Trust}
-\label{sec:selftrust}
-L\"{o}b's Theorem can be viewed as an obstacle to a formal system of logic ``trusting itself'' to soundly prove any statement $p$.  Intuitively, we might like it if a system could ``trust itself about $p$" by proving that ``If I prove $p$, then $p$ is true."  But this is just the hypothesis $\proves{} \bx{}p \implies p$ of L\"{o}b's Theorem, whence the conclusion $\bx{}p$ follows, which is undesirable (makes our system unsound) if $p$ turns out to actually be false.
-
-Previously, one might have thought this obstacle was merely a quirk of infinities arising from the the unbounded proof-existence predicate $\bx{}$.  However, we see now that some bounded obstacle remains: namely, that a bounded logical system cannot trust itself ``about moderately long proofs in general".  To see this interpretation, let $p(k)$ be any statement with a free parameter $k$, and $f(k) \succ \lg(k)$ be any function, representing ``moderate largeness''.  Then the hypothesis $\proves{} \forall k, \bx{f(k)} p(k) \implies p(k)$ of Parametric Bounded L\"{o}b's Theorem says that our logical system generally trusts its proofs about $p(k)$, even if they are moderately long.  However, this will imply that $\proves{} \forall k > \hat k, p(k)$, which is bad news if $p(k)$ is sometimes false.
 
 \section{Summary}
 We have exhibited a version of L\"{o}b's Theorem which can be applied to algorithms which read and write proofs using bounded computational resources, such as formal verification software.  This result, in turn, can be used by algorithmic agents that have access to one another's source codes to achieve cooperative outcomes (among other things) that out-perform classical Nash equilibria and correlated equilibria, via conditions that are much more robust than previously known examples depending on program equality (\cite{Tennenholtz:2004:Program}).
 
 As a direction for potential future investigation, it seems inevitable that other agents described in the purely logical (non-computable) setting of  B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} will likely have bounded, algorithmic analogs, and that many more general consequences of L\"{o}b's Theorem---perhaps all the theorems of G\"{o}del--L\"{o}b provability logic---will have resource-bounded analogs as well.
 
-\section{Appendix: String abbreviations in proofs}
+\appendix
+
+\section{Inspiration: a modal proof of L\"{o}b's Theorem}
+
+The proof of our bounded version of L\"{o}b's Theorem was inspired by a particular proof of L\"{o}b's original theorem using a few simple properties of $\Box$, along with the classical Diagonal Lemma~\cite{Carnap:1934}.\footnote{Thanks to Professor Leo Harrington for the advice to include this proof as a way of motivating the remainder of the paper.}
+
+\begin{itemize}
+\item {\bf Necessitation:} From $\vdash A$ conclude $\vdash \Box A$: Informally, this says that if A is a theorem, then it is provable.
+\item {\bf Internal necessitation:} $\vdash \Box A \rightarrow \Box \Box A$: If A is provable, then it is provable that it is provable.
+\item {\bf Box distributivity:} $\vdash \Box (A \rightarrow B) \rightarrow (\Box A \rightarrow \Box B)$:  This rule allows applications of modus ponens inside the provability operator. If it is provable that A implies B, and A is provable, then B is provable.
+\item {\bf Diagonal Lemma:} for any formula $F(-)\in\Lang_1(S)$ (having one free variable), there exists a sentence $\psi\in\Lang_0(S)$ (with no free variables) such that $$\proves{} \psi \iff F(\qquote\psi).$$  
+\end{itemize}
+
+\begin{proof}[Proof of L\"{o}b's Theorem:]\ 
+
+\begin{enumerate}
+\item Suppose $\vdash \Box p \rightarrow p$.
+
+Define $F(x) \in \Lang_1(\PA)$ by $F(\qquote\psi) = (\Box \psi \rightarrow p)$ for any $\psi \in \Lang_0(\PA)$ and $F(x) = 0$ otherwise.  From the Diagonal Lemma, $F$ has a fixed point $\psi$:
+
+\item $\vdash \psi \leftrightarrow (\Box \psi \rightarrow p)$.  In particular, we have the forward implication:
+\item $\vdash \psi \rightarrow (\Box \psi \rightarrow p)$.  By the necessitation rule:
+\item $\vdash \Box(\psi \rightarrow (\Box \psi \rightarrow p))$.  By the box distributivity rule:
+\item $\vdash \Box\psi \rightarrow \Box(\Box \psi \rightarrow p)$.  Box distributivity with $ A = \Box \psi $ and $ B= p$ gives:
+\item $\vdash \Box(\Box \psi \rightarrow p) \rightarrow (\Box\Box\psi \rightarrow \Box p)$.  From this and 5 we have:
+\item $\vdash \Box \psi \rightarrow (\Box\Box\psi \rightarrow \Box p)$.  By the internal necessitation rule:
+\item $\vdash \Box \psi \rightarrow \Box \Box \psi$.  From this and 7:
+\item $\vdash \Box \psi \rightarrow \Box p$.  From this and 1:
+\item $\vdash \Box \psi \rightarrow p$.  From 2:
+\item $\vdash (\Box \psi \rightarrow p) \rightarrow \psi$.  From this and 10:
+\item $\vdash \psi$.  Thus, by the necessitation rule:
+\item $\vdash \Box \psi$.  Finally, from this and 10 we have:
+\item $\vdash p$.
+\end{enumerate}
+
+\end{proof}
+
+
+\section{String abbreviations in proofs}
 
 In section \ref{sec:system}, we required that our proof system allow the definition and use of abbreviations, because real-world proof systems (such as MetaMath \cite{Megill:2007}) do this, and because it makes our analysis easier.  Abbreviations are just string substitutions which must be replaced by their previously defined values when reading a proof.  For the sake of concreteness, we illustrate this with an example.
 
