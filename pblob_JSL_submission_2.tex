@@ -102,20 +102,13 @@ L\"{o}b's Theorem states that, if $\bx{}p$ denotes the provability of statement 
 \]
 This result defies the intuition that we might soundly prove the ``self-trust'' statement that {\em if we prove $p$, then $p$ is true}.  Indeed, when $p$ is the statement ``$1=0$'', L\"{o}b's Theorem reduces to G\"{o}del's First Incompleteness Theorem: that arithmetic cannot prove its own consistency.
 
-If we would ever hope to apply L\"{o}b's Theorem to the analysis of real-world algorithms which analyze other algorithms, such as compilers or formal verification software, a version taking into account computational resource bounds is needed.  In particular, there will be some bound (measured in characters) on the length of the longest proof the system can write or validate.
+If we would ever hope to apply L\"{o}b's Theorem to the analysis of real-world algorithms which analyze other algorithms, such as compilers or formal verification software, a version taking into account computational resource bounds is needed.  In particular, given any such system, there will be some bound (measured in characters) on the length of the longest proof that it can write or validate.
 
+Some need has already arisen for a resource-bounded version of L\"{o}b's theorem: in the game theory of agents who can read on another's source code.  Work of B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have found that L\"{o}b's Theorem can be be used to design logical entities that resemble ``agents'' which achieve robust cooperative equilibria in games such as the Prisoner's Dilemma.  However, these ``modal agents'' were defined as uncomputable logical functions, and to exhibit computable versions, a resource-bounded version of L\"{o}b's Theorem is required.
 
-\bred{Plan: elaborate on: some questions have already arisen that are in want of such a resource-bounded version}
+Previous work of Pudl\'{a}k~\cite{Pudlak:1998} on provability of finitistic consistency statements were suggestive that such a result might be possible
 
-But what if we restrict attention to claims about proofs of bounded length?  Is there then some sense in which self-trust can be recovered?  
-
-
-\subsection{The need for a resource-bounded version} 
-
-
-In addition, work of B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have found that L\"{o}b's Theorem can be be used to design logical entities that resemble ``agents'' which achieve robust cooperative equilibria in games such as the Prisoner's Dilemma.  However, these ``modal agents'' were defined as uncomputable logical functions, and to exhibit computable versions, a resource-bounded version of L\"{o}b's Theorem is required.
-
-Previous work of Pudl\'{a}k~\cite{Pudlak:1998} on provability of finitistic consistency statements were suggestive that such a result might be possible, and in fact we prove here a version that suits both of the above use cases:
+\bred{elaborate}, and in fact we prove here a version that suits both of the above use cases:
 
 \begin{theorem*}[Parametric Bounded L\"{o}b]
 Suppose $p(-)$ is a logical formula with a single unquantified variable, and that $f:\NN \to \NN$ is computable and  exceeds a certain asymptotic lower bound.  Then $\exists\hat k$ :
@@ -125,13 +118,13 @@ Suppose $p(-)$ is a logical formula with a single unquantified variable, and tha
 \end{align*}
 \end{theorem*}
 
-
-Since the main results of this paper hinge on proving a generalization of L\"{o}b's theorem, we begin by recalling L\"{o}b's Theorem itself in this introduction, and briefly discussing why a version of the theorem for logical proof systems with bounded computational resources is particularly interesting.   
 Sections \ref{sec:fund} through \ref{sec:fund} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:pbob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
 
 \section{Fundamentals}\label{sec:fund}
 
-\subsection{Proof Length and Notation}
+Since this paper draws from work in several disciplines, this section is provided to clarify the use of notation and conventions throughout.
+
+\paragraph{Proof length conventions and notation.}
 If the first line of a three-line proof is so long that it would not fit on any physical computer system, saying the proof is ``only three lines long'' is not very descriptive.  Therefore, we will measure proof length in {\em characters} instead of lines, the way one might measure the size of a text file on a computer.  An extensive analysis of proof lengths measured in characters is covered by Pudl\'{a}k~\cite{Pudlak:1998}.
 
 We will fix a proof system $S$ (e.g. an extension of Peano Arithmetic) throughout, and write
@@ -139,7 +132,8 @@ $$S \proves{n} \phi, \quad \text{or simply} \quad \proves{n} \phi$$
 to mean that there exists an $S$-proof of $\phi$ using $n$ or fewer characters.  
 
 
-\subsection{Proof System}\label{sec:system}
+\paragraph{Proof system.}
+\label{sec:system}
 We let $S$ be any first-order proof system that
 \begin{itemize}
 \item[1)] can represent computable functions in the sense of Section \ref{sec:rep},
@@ -166,7 +160,7 @@ We write
 \item[] $\Const(S)$ for the set of constants in $S$ (e.g. $0$, $\Ss 0$, etc.).
 \end{itemize}
 
-\subsection{G\"{o}del Encoding}
+\paragraph{Choosing a G\"{o}del encoding.}
 We fix throughout a G\"{o}del numbering
  $$\#(-) : \Lang(S) \to \NN$$
 and a ``numeral'' mapping
@@ -178,7 +172,7 @@ $$\qquote{(-)} : \Lang(S)\to\Const(S)$$
 $$\qquote{\phi}:=\numeral \# \phi$$
 which allows $S$ to write proofs about itself.
 
-\subsection{Representing Computable Functions}\label{sec:rep}
+\paragraph{Representing computable functions.}\label{sec:rep}
 It is known (see, e.g.\ Theorem 6.8 of Cori and Lascar, Part II~\cite{Cori:2001}) that for any computable function $f:\NN\to\NN$, there exists a ``graph'' predicate $\Gamma_f(-,-)\in\Lang_2(\PA)$ such that
 %
 $$\forall x\in\NN, \; \PA \proves{} \forall y, \; \Gamma_f(\numeral x,y) \iff y = \numeral f(x)$$
@@ -193,7 +187,7 @@ However, for easier reading, in such cases we will abuse notation and write
 $$\proves{} \forall x, \; f(x) < g(x) + h(x),$$
 leaving the expansion in terms of $\Gamma$'s and $\forall y$'s to the reader.
 
-\subsection{Asymptotic Notation}
+\paragraph{Asymptotic Notation.}
 We use the convention that $f \prec g$ means that for any $M\in \NN$, there exists and $N\in\NN$ such that $\forall n>N, Mf(n) < g(n)$.  We write $\Oo(g)$ for the set of functions $f\preceq g$, and for a specific function $\Ee$ we will sometimes write write $\Ee(\Oo(g))$ for the set of functions of the form $\Ee \circ f$ where $f\in \Oo(g)$.
 
 \section{Inspiration: a modal proof of L\"{o}b's Theorem}
