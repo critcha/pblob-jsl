@@ -1,0 +1,708 @@
+\documentclass[onecolumn]{miri-tech-article}
+
+% Bibliography File(s)
+\bibliography{MIRIPublications.bib,Inbox.bib,General.bib}{}%,General.bib
+
+% Paper-Specific Packages
+\usepackage{amsmath,amsthm,amsfonts}
+%\usepackage{mdwlist}
+%\usepackage[ruled,vlined,noend]{algorithm2e}
+%\usepackage{tikz}
+%\usepackage{caption,subcaption}
+%\usepackage[colorinlistoftodos,textsize=small]{todonotes}
+%\usetikzlibrary{shapes,arrows}
+%\usetikzlibrary{positioning,intersections}
+%\usepackage{microtype}
+%\usepackage{accents}
+%\usepackage{color}
+\usepackage{verbatimbox}
+\usepackage{fancyvrb}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\usepackage{multirow,array}
+%\usepackage{float}
+%\restylefloat{table}
+
+% Misc Setup
+\setcounter{secnumdepth}{2}
+
+% Standard commands:
+%\DeclareMathOperator*{\argmax}{argmax}
+%\DeclareMathOperator*{\argmin}{argmin}
+%\newcommand{\ch}{\bibstring{chapter}\xspace}
+%\newcommand{\pp}{\bibstring{page}\xspace}
+%\newcommand{\set}[1]{\ensuremath{\{\,#1\,\}}}
+%\newcommand{\any}{\,\cdot\,}
+%\newcommand{\ind}{\,;\,}
+%\newcommand{\Quote}[1]{\ensuremath{\ulcorner#1\urcorner}}
+%\newcommand{\PA}{\ensuremath{\mathcal{P}\!\mathcal{A}}\xspace}
+%\newcommand{\ZF}{\ensuremath{\mathcal{ZF}}\xspace}
+%\newcommand{\RR}{\ensuremath{\mathbb{R}}\xspace}
+%\newcommand{\QQ}{\ensuremath{\mathbb{Q}}\xspace}
+%\newcommand{\PP}{\ensuremath{\mathbb{P}}\xspace}
+%\newcommand{\EE}{\ensuremath\mathbb{E}}
+%\newcommand{\Algorithm}[1]{Algorithm~\ref{alg:#1}}
+%\newcommand{\Figure}[1]{Figure~\ref{fig:#1}}
+%\newcommand{\Rule}[1]{Desideratum~\ref{rule:#1}}
+%\newcommand{\Section}[1]{Section~\ref{sec:#1}}
+%\newcommand{\Table}[1]{Table~\ref{tab:#1}}
+%\newcommand{\Theorem}[1]{Theorem~\ref{thm:#1}}
+%\newcommand{\eq}[1]{\eqref{eq:#1}}
+%\newcommand{\Equation}[1]{equation \eq{#1}}
+
+%Paper-specific commands:
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{temptingclaim}[theorem]{False But Temping Claim}
+\newtheorem{property}{Property}
+\newtheorem{corollary}[theorem]{Corollary}
+\numberwithin{equation}{section}
+\newcommand{\eqn}[1]{\begin{equation}#1\end{equation}}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\Ee}{\mathcal{E}}
+%\newcommand{\Ff}{\mathcal{F}}
+\newcommand{\Oo}{\mathcal{O}}
+\newcommand{\Ss}{\mathcal{S}}
+%\newcommand{\vect}[1]{\mathbf{#1}}
+
+\newcommand{\proves}[1]{\underset{#1}{\vdash}}
+\newcommand{\bx}[1]{\Box_{#1}}
+
+\newcommand{\PA}{\mathcal{P}\!\mathcal{A}}
+\newcommand{\Lang}{\mathrm{Lang}}
+\newcommand{\Const}{\mathrm{Const}}
+\renewcommand{\implies}{\rightarrow}
+\renewcommand{\to}{\rightarrow}
+\newcommand{\Implies}{\;\;\Rightarrow\;\;}
+\renewcommand{\iff}{\leftrightarrow}
+%\newcommand{\ul}{\underline}
+\newcommand{\qquote}[1]{\left\ulcorner #1 \right\urcorner}
+%\newcommand{\Lob}{\text{Lob}}
+%\newcommand{\lob}{{\ell ob}}
+\newcommand{\numeral}{{}^\circ}
+\newcommand{\AND}{{\textrm{ and }}}
+
+\renewcommand{\lg}{\mathrm{lg\hspace{0.3ex}}}
+\renewcommand{\-}{^{-1}}
+
+\newcommand{\CB}{\mathrm{CooperateBot}}
+\newcommand{\FB}{\mathrm{FairBot}}
+
+%\newcommand{\Red}[1]{{\color{red}#1}}
+
+% Document Title
+\title{Parametric Bounded L\"{o}b's Theorem and Robust Cooperation of Bounded Agents}
+
+% Authors
+\author{Andrew Critch \\ Machine Intelligence Research Institute \\ critch@intelligence.org}
+
+\begin{document}
+
+%\nocopyright % Optional – Use this to prevent any copyright notice from appearing.
+\publishingnote{}
+
+\maketitle
+
+\begin{abstract}
+L\"{o}b's Theorem makes predictions about the behavior of self-reflective systems with unbounded computational resources with which to write and evaluate proofs.  However, in the real world, self-reflective systems will have limited memory and processing speed, so in this paper we introduce a bounded version of L\"{o}b's Theorem which is applicable given such resource limitations.  
+These results have implications for the game theory of bounded agents who are able to write proofs about themselves and one another, including the capacity to out-perform classical Nash equilibria and correlated equilibria, attaining mutually cooperative program equilibrium in the Prisoner's Dilemma.
+\end{abstract}
+
+\section{Introduction}\label{sec:bo}
+Since the main results of this paper hinge on proving a generalization of L\"{o}b's theorem, we begin by recalling L\"{o}b's Theorem itself in this introduction, and briefly discussing why a version of the theorem for logical proof systems with bounded computational resources is particularly interesting.   Sections 2 through 5 are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections 6 and 7 explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
+
+%The arc of this paper begins and ends with a discussion of the Prisoner's Dilemma, but it passes through a new result in provability logic.  Thus, it will hopefully be of interest to game theorists and logicians alike.
+%
+%\subsection{Open-source Prisoner's Dilemma}
+%
+%Consider the Prisoner's Dilemma, a game with two possible actions C (Cooperate) and D (Defect), with the following payoff matrix:
+%
+%  \begin{table}[ht]
+%  \centering
+%    \setlength{\extrarowheight}{2pt}
+%    \begin{tabular}{cc|c|c|}
+%      & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}\\
+%      & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$C$}  & \multicolumn{1}{c}{$D$} \\\cline{3-4}
+%      \multirow{2}*{Player $1$}  & $C$ & $(2,2)$ & $(0,3)$ \\\cline{3-4}
+%      & $D$ & $(3,0)$ & $(1,1)$ \\\cline{3-4}
+%    \end{tabular}
+%  \end{table}
+%
+%\noindent In other words, by choosing $D$ over $C$, each player can destroy 2 units of its opponent's utility to gain 1 unit of its own.  As long as the payoffs are truly represented in the matrix---for example, there are no reputational costs of choosing $D$ that are not already imputed in the payoffs---then $(D,D)$ is the only Nash equilibrium, and the only correlated equilibrium.  In fact, irrespective of the opponent's move, it is better to defect.  It is therefore broadly believed that $(D,D)$ is an inevitable outcome between ``rational'' agents in a truly represented (non-iterated) Prisoner's Dilemma.  
+%
+%But consider a version of the game --- as first studied by \cite{Tennenholtz:2004:Program} --- wherein each player is an algorithm which can read its opponent's source code, as well as its own, before the game.  Is $D$ still the obvious correct strategy?  As a warm-up, one can imagine designing various algorithmic ``agents'' to compete in such games.  For example, an agent who always cooperates:
+%
+%\begin{Verbatim}[frame=single]
+%def CooperateBot(Opponent) :
+%	return C
+%\end{Verbatim}
+%
+%Tenenholtz \cite{Tennenholtz:2004:Program} considers a simple agent which cooperates if and only if the opponent is identitically equal to itself:
+%
+%\begin{Verbatim}[frame=single]
+%def IsMeBot(Opponent) :
+%	if Opponent=IsMeBot
+%		return C
+%	else
+%		return D
+%\end{Verbatim}
+%
+%When playing against IsMeBot, the opponent is incentivized to ``be IsMeBot'', and in particular, cooperate.  To capture this intuition, Tenenholtz defines a {\em \bf program equilibrium} to be a pair of agents (programs) competing in a game, with access to one another's source code, such that replacing either agent by a different agent would decrease its expected payoff.  Thus, a program equilibrium is a Nash equilibrium of the `meta-game' of choosing which program to play.  
+%
+%Agents in a program equilibrium can return outputs that do not constitute a Nash equilibrium (of the object-level game), even in a one-shot game, as can be seen here: (IsMeBot,IsMeBot) is a program equilibrium, returning outputs (C,C) and payoffs (2,2).  This program equilibrium of IsMeBot is highly fragile, however: if we let IsMeBot' be the same program but with a tiny irrelevant change to its code --- a comment perhaps --- then IsMeBot will defect against it.  Agents studied by \cite{Fortnow:2009:Program} are similarly fragile.
+%
+%To the end of someday designing real-world cooperative agents, it is therefore interesting to design a more ``robust'' cooperative agent, whose behavior does not depend too heavily on the details of the implementation of its opponent, but which nonetheless incentivizes its opponent to cooperate.  For this, consider:
+%
+%\begin{Verbatim}[frame=single]
+%def FairBot_k(Opponent) :
+%	search for a proof of length k that  
+%		Opponent(FairBot_k) = C
+%	if found,
+%		return C
+%	else
+%		return D
+%\end{Verbatim}
+%
+%\noindent Here a `proof of length k' means a mathematical proof --- say, in some implementation of Peano Arithmetic --- using fewer than $k$ characters (symbols) to write out as a text file.  To begin thinking about these agents, observe that
+%
+%\begin{itemize}
+%\item $\CB(\FB_k) = C$, because $\CB$ always returns $C$;
+%\item $\FB_k(\CB) = C$ when $k$ is large enough to complete the shortest proof that $\CB(\FB_k)=C$ (which, given the simplicity of $\CB$, will be very short), and $D$ when $k$ is too small to complete the proof.
+%
+%\end{itemize}
+%
+%\subsection{The Example of FairBot vs FairBot}
+%
+%\noindent The first interesting question that arises is then:
+%
+%\begin{center}
+%What is $\FB_k(\FB_k)$?
+%\end{center}
+%
+%\noindent It is not so hard to see that if $k$ is too small to complete any proofs, each FairBot returns $D$.  But suppose $k$ is extremely large, for example, $10^{100}$.  Does $\FB_k(\FB_k)$ find a proof that $\FB_k(\FB_k)=C$ and therefore return $C$, validating the proof?  Or does it continue searching for a proof that $\FB_k(\FB_k)=C$ until the proof bound is reached, and having found no such proof, return $D$, consistent with the failed proof search?
+%
+%It is worth pausing a moment to reflect on this question, since, when given no hints, 100\% of the dozens of mathematicians and computer scientists I've seen asked it have answered incorrectly at first (myself included).
+%
+%Consider that each instance of $\FB_k$ is waiting for a proof that the other $\FB_k$ will return $C$ before it will return $C$ itself, and since neither algorithm has a clause in its code to take a ``leap of faith'' in such a situation, it seems that neither algorithm will ``make the first move'', so their proof searches must simply keep searching until they reach their limit $k$ and return $D$.
+%
+%However, this reasoning turns out to be incorrect, because of a version of L\"{o}b's Theorem that is the main result of this paper, proven in Section \ref{sec:blob}.  It implies that $\FB_k(\FB_k) = C$ for large $k$.  Aside from being surprising, this result opens up a whole class of behaviors that can outperform the classical $(D,D)$ equilibrium in a truly formulated, non-iterated Prisoner's Dilemma.  Moreover, this performance can be made more robust, into a statement about any two agents willing to cooperate based on a proof of their opponents' cooperation.
+%
+%Such interesting ``L\"{o}bian" behavior first seemed plausible from the work of B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob}, who illustrated something like program equilibria among certain non-computable logical entities they called ``modal agents'', including an analog of FairBot in that context. 
+%
+%\subsection{Robust Cooperative Program Equilibria}
+%
+%The main application of this paper is to establish robust cooperative program equilibria for computationally bounded agents.  In particular, it is possible to write algorithms which are unexploitable in a Prisoner's Dilemma---that is, they never receive the undesirable outcome $(C,D)$ as Player 1---and which achieve the outcome $(C,C)$ against a variety of opponents, such that there is no incentive for their opponents to deviate from cooperation, even though there is no iteration or reputation to be earned in the game.  This is what we mean by ``robust cooperation''.
+%
+%To summarize the result, we write $\bx{k}p$ for the statement ``$p$ can be proven using $k$ or fewer written symbols''.
+%Given a nonnegative increasing function $G$, we say that an agent $A_k$ taking a parameter $k \in \NN$ is {\bf G-fair} if
+%$$\proves{} \bx{k+G(\textrm{LengthOf}(Opp))}[Opp(A_k) = Cooperate] \implies A_k(Opp) = Cooperate$$
+%In other words, if $A_k$ finding a proof that its opponent cooperates is sufficient for $A_k$ to cooperate, we say it is $G$-fair, provided the proof lengths in the search did not exceed $k+G(\textrm{LengthOf}(Opp))$.  Then we have, in terms to be made precise later,
+%
+%\begin{theorem*}[{\bf Robust cooperation of bounded agents}] If certain bounds are satisfied by the G\"{o}del encoding of our proof system, and the function $G$ exceeds a certain asymptotic lower bound, then for any $G$-fair agents $A_k$ and $B_k$, we have for all sufficiently large $m,n$,
+%$$A_m(B_n) = B_n(A_m) = Cooperate$$
+%\end{theorem*}
+%
+%This result depends crucially on a new version of L\"{ob}'s Theorem.
+% 
+
+L\"{o}b's Theorem states that, if $\bx{}p$ denotes the provability of statement $p$ in Peano Arithmetic (or any extension of it), then 
+$$\bx{}(\bx{}p \implies p) \implies \bx{}p$$
+If the reader has never encountered this result, consider the case where $p$ is the Riemann Hypothesis, $RH$.  Suppose that the Riemann Hypothesis is, unbeknownst to us, false.  Without yet knowing whether $RH$ is true, it is tempting for us to claim at least that {\em if RH is provable, then RH is true}, i.e. $\bx{}RH \implies RH$.  However, if that claim were itself provable, i.e. if $\bx{}(\bx{}RH \implies RH)$, then L\"{o}b's Theorem tells us that $\bx{}RH$---the Riemann Hypothesis is provable---which is bad news for the soundness of our proof system if the Riemann Hypothesis is actually false.  Thus, L\"{o}b's Theorem defies the intuition that we might soundly prove the ``self-trust'' statement that {\em if we prove $p$, then $p$ is true}.  Indeed, when $p$ is the statement ``$1=0$'', L\"{o}b's Theorem reduces to G\"{o}del's First Incompleteness Theorem: that arithmetic cannot prove its own soundness.
+
+\subsection{The need for a resource-bounded version} 
+If we would ever hope to apply L\"{o}b's Theorem to the analysis of real-world algorithms which analyze other algorithms, such as compilers or formal verification software, a version taking into account computational resource bounds is needed.  In particular, there will be some bound (measured in characters) on the length of the longest proof the system can write or validate.
+
+In addition, work of B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have found that L\"{o}b's Theorem can be be used to design logical entities that resemble ``agents'' which achieve robust cooperative equilibria in games such as the Prisoner's Dilemma.  However, these ``modal agents'' were defined as uncomputable logical functions, and to exhibit computable versions, a resource-bounded version of L\"{o}b's Theorem is required.
+
+Previous work of Pudl\'{a}k~\cite{Pudlak:1998} on provability of finitistic consistency statements were suggestive that such a result might be possible, and in fact we prove here a version that suits both of the above use cases:
+
+\begin{theorem*}[Parametric Bounded L\"{o}b]
+Suppose $p(-)$ is a logical formula with a single unquantified variable, and that $f:\NN \to \NN$ is computable and  exceeds a certain asymptotic lower bound.  Then $\exists\hat k$ :
+\begin{align*}
+             &\proves{} \forall k,\; \bx{f(k)}p(k) \implies p(k)\\
+\Implies &\proves{} \forall k>\hat k, \; p(k)
+\end{align*}
+\end{theorem*}
+
+
+
+\section{Fundamentals}
+
+\subsection{Proof Length and Notation}
+If the first line of a three-line proof is so long that it would not fit on any physical computer system, saying the proof is ``only three lines long'' is not very descriptive.  Therefore, we will measure proof length in {\em characters} instead of lines, the way one might measure the size of a text file on a computer.  An extensive analysis of proof lengths measured in characters is covered by Pudl\'{a}k~\cite{Pudlak:1998}.
+
+We will fix a proof system $S$ (e.g. an extension of Peano Arithmetic) throughout, and write
+$$S \proves{n} \phi, \quad \text{or simply} \quad \proves{n} \phi$$
+to mean that there exists an $S$-proof of $\phi$ using $n$ or fewer characters.  
+
+
+\subsection{Proof System}\label{sec:system}
+We let $S$ be any first-order proof system that
+\begin{itemize}
+\item[1)] can represent computable functions in the sense of Section \ref{sec:rep},
+\item[2)] can write any number $k\in\NN$ using $\Oo(\lg k)$ symbols, and 
+\item[3)] allows the definition and use of abbreviations during proofs.
+\end{itemize}
+For example, we could take Peano Arithmetic, where each proof line is either 
+\begin{itemize}
+\item an axiom, or
+\item an application of Modus Ponens from lines above it,
+\end{itemize}
+and additionally allow ourselves to write numbers in a binary format, and allow proof lines lines which are
+\begin{itemize}
+\item the definition of an abbreviation that may be used in subsequent lines.
+\end{itemize}
+For concreteness, an illustration of a proof using abbreviations is given in the Appendix.
+
+\noindent We have chosen to allow abbreviations in our proof system for two reasons.  The first is that real-world automated proof systems will tend to use abbreviations because of memory constraints.  The second is that abbreviations make the lengths of shortest-proofs in this system slightly easier to analyze.  For example, if a number $N$ with a very large number of digits occurs in the shortest proof of a proposition, it will not occur multiple times; instead, it will occur only once, in the definition of an abbreviation for it.  Then, we don't have to carefully count the number of times the numeral occurs in the proof to determine its contribution to the proof length; its contribution will simply be linear in its length, or $\lg N$.
+
+We write 
+\begin{itemize}
+\item[] $\Lang(S)$ for the language of $S$,
+\item[] $\Lang_r(S)$ for the formulas in $\Lang(S)$ with $r$ free variables, and 
+\item[] $\Const(S)$ for the set of constants in $S$ (e.g. $0$, $\Ss 0$, etc.).
+\end{itemize}
+
+\subsection{G\"{o}del Encoding}
+We fix throughout a G\"{o}del numbering
+ $$\#(-) : \Lang(S) \to \NN$$
+and a ``numeral'' mapping
+$$\numeral(-) : \NN \to \Const(S)\subseteq \Lang(S)$$
+for expressing naturals as constants in $S$.  Note that in traditional $\PA$, for example, $\numeral 5 = \Ss\Ss\Ss\Ss\Ss0$.  However, to be more realistic we have assumed that $S$ uses a binary encoding to be more efficient, so e.g.,
+$$\numeral 5 = 101.$$
+The maps $\#(-)$ and $\numeral(-)$ combine to form a G\"{o}del encoding
+$$\qquote{(-)} : \Lang(S)\to\Const(S)$$
+$$\qquote{\phi}:=\numeral \# \phi$$
+which allows $S$ to write proofs about itself.
+
+\subsection{Representing Computable Functions}\label{sec:rep}
+It is known (see, e.g.\ Theorem 6.8 of Cori and Lascar, Part II~\cite{Cori:2001}) that for any computable function $f:\NN\to\NN$, there exists a ``graph'' predicate $\Gamma_f(-,-)\in\Lang_2(\PA)$ such that
+%
+$$\forall x\in\NN, \; \PA \proves{} \forall y, \; \Gamma_f(\numeral x,y) \iff y = \numeral f(x)$$
+
+\noindent We have assumed that $S$ is capable of representing computable functions in this way (e.g., by being an extension of $\PA$).
+
+The two-place predicates $\Gamma_f$ are cumbersome in writing because each usage introduces a quantifier.  For example, if we we have functions $f$, $g$ and $h$ and we want to say that $S$ proves that for any $x$ value, $f(x) < g(x) + h(x)$, technically we should write
+%
+$$\proves{} \forall x \forall y_1 \forall y_1 \forall y_3,\; \Gamma_f(x,y_1) \AND \Gamma_g(x,y_2)\AND \Gamma_h(x,y_3) \implies y_1 < y_2 + y_3$$
+%
+However, for easier reading, in such cases we will abuse notation and write
+$$\proves{} \forall x, \; f(x) < g(x) + h(x),$$
+leaving the expansion in terms of $\Gamma$'s and $\forall y$'s to the reader.
+
+\subsection{Asymptotic Notation}
+We use the convention that $f \prec g$ means that for any $M\in \NN$, there exists and $N\in\NN$ such that $\forall n>N, Mf(n) < g(n)$.  We write $\Oo(g)$ for the set of functions $f\preceq g$, and for a specific function $\Ee$ we will sometimes write write $\Ee(\Oo(g))$ for the set of functions of the form $\Ee \circ f$ where $f\in \Oo(g)$.
+
+\section{Inspiration: a modal proof of L\"{o}b's Theorem}
+
+The proof of our bounded version of L\"{o}b's Theorem was inspired by a particular proof of L\"{o}b's original theorem using a few simple properties of $\Box$, along with the classical Diagonal Lemma~\cite{Carnap:1934}.\footnote{Thanks to Professor Leo Harrington for the advice to include this proof, taken from Wikipedia, as a way of motivating the remainder of the paper.}
+
+\begin{itemize}
+\item {\bf Necessitation:} From $\vdash A$ conclude $\vdash \Box A$: Informally, this says that if A is a theorem, then it is provable.
+\item {\bf Internal necessitation:} $\vdash \Box A \rightarrow \Box \Box A$: If A is provable, then it is provable that it is provable.
+\item {\bf Box distributivity:} $\vdash \Box (A \rightarrow B) \rightarrow (\Box A \rightarrow \Box B)$:  This rule allows applications of modus ponens inside the provability operator. If it is provable that A implies B, and A is provable, then B is provable.
+\item {\bf Diagonal Lemma:} for any formula $F(-)\in\Lang_1(S)$ (having one free variable), there exists a sentence $\psi\in\Lang_0(S)$ (with no free variables) such that $$\proves{} \psi \iff F(\qquote\psi).$$  
+\end{itemize}
+
+\begin{proof}[Proof of L\"{o}b's Theorem:]\ 
+
+\begin{enumerate}
+\item Suppose $\vdash \Box p \rightarrow p$.
+
+Define $F(x) \in \Lang_1(\PA)$ by $F(\qquote\psi) = (\Box \psi \rightarrow p)$ for any $\psi \in \Lang_0(\PA)$ and $F(x) = 0$ otherwise.  From the Diagonal Lemma, $F$ has a fixed point $\psi$:
+
+\item $\vdash \psi \leftrightarrow (\Box \psi \rightarrow p)$.  In particular, we have the forward implication:
+\item $\vdash \psi \rightarrow (\Box \psi \rightarrow p)$.  By the necessitation rule:
+\item $\vdash \Box(\psi \rightarrow (\Box \psi \rightarrow p))$.  By the box distributivity rule:
+\item $\vdash \Box\psi \rightarrow \Box(\Box \psi \rightarrow p)$.  Box distributivity with $ A = \Box \psi $ and $ B= p$ gives:
+\item $\vdash \Box(\Box \psi \rightarrow p) \rightarrow (\Box\Box\psi \rightarrow \Box p)$.  From this and 5 we have:
+\item $\vdash \Box \psi \rightarrow (\Box\Box\psi \rightarrow \Box p)$.  By the internal necessitation rule:
+\item $\vdash \Box \psi \rightarrow \Box \Box \psi$.  From this and 7:
+\item $\vdash \Box \psi \rightarrow \Box p$.  From this and 1:
+\item $\vdash \Box \psi \rightarrow p$.  From 2:
+\item $\vdash (\Box \psi \rightarrow p) \rightarrow \psi$.  From this and 10:
+\item $\vdash \psi$.  Thus, by the necessitation rule:
+\item $\vdash \Box \psi$.  Finally, from this and 10 we have:
+\item $\vdash p$.
+\end{enumerate}
+
+\end{proof}
+
+\section{A Parametric Diagonal Lemma}
+To reason about computer systems with certain as-yet unset parameters, such as memory constraints, we will need a generalization of the Diagonal Lemma for formulas with free variables to represent those parameters in a way that avoids writing a separate proof for every instance of the parameters.
+
+\begin{proposition}[Parametric Diagonal Lemma]Suppose $S$ is a first-order theory capable of representing all computable functions, as in Section \ref{sec:rep}.  Then for any predicate $G\in\Lang_{r+1}(S)$, there exists a predicate $\psi\in\Lang_r(S)$ such that: \\
+$$\proves{} \forall \bar k = (k_1,\ldots,k_r), \; \psi(\bar k) \iff G(\qquote\psi,\bar k)$$
+\end{proposition}
+
+Since the first draft of this paper, it has been pointed out\footnote{Thanks to Professor Dana Scott.} that this result can be found on p. 53 of \cite{Boolos:1993:Logic}.  However, since the proof exposited here is quite short, and simpler to follow in the context of this paper, we decided to keep it here for the purpose of self-containment:
+
+\begin{proof}
+We define a ``partial self-evaluation function'' $e:\NN\to\NN$ as follows: 
+$$e(n) = \begin{cases} 
+\#\left[\theta(\qquote\theta,-,\ldots,-)\right] &\mbox{if } n = \#\theta \text{ for some }\theta\in\Lang_{r+1}(S) \\ 
+0 & \mbox{otherwise }
+\end{cases}
+$$
+Now, $e$ is computable, and therefore representable in $\Lang(S)$, so we can define $\beta\in\Lang_{r+1}(S)$ by 
+$$\beta(n,\bar k) := G(e(n),\bar k)$$ 
+(using the notational convention of Section \ref{sec:rep} to avoid writing extra quantifiers and $\Gamma_e$'s).  Then, $\forall \theta\in\Lang_{r+1}(S)$,
+$$\proves{} \forall \bar k\; \beta(\qquote{\theta},\bar k) \iff G(\qquote{\theta(\qquote{\theta},-,\ldots,-)},\bar k)$$
+Now let $\theta = \beta$, so we have
+$$\proves{} \forall \bar k\; \beta(\qquote(\beta),\bar k) \iff G(\qquote{\beta(\qquote{\beta},-,\ldots,-)},\bar k)$$
+%
+Finally, taking $\psi(\bar k) = \beta(\qquote{\beta},\bar k)$ yields the desired result
+$$\proves{} \forall \bar k\; \psi(\bar k) \iff G(\qquote{\psi},\bar k)$$
+
+
+\end{proof}
+
+\section{A Bounded Provability Predicate, \texorpdfstring{$\bx{k}$}{box k}}
+\subsection{Defining \texorpdfstring{$\bx{k}$}{box k}}
+Given a choice of G\"{o}del encoding for Peano Arithmetic, it is classical that a predicate $Bew(-,-) \in \Lang_2(S)$ exists such that $Bew(m,n)$ means, in natural language, that the number $m$ encodes a proof in $\PA$, and that the number $n$ encodes the statement it proves.  So, the standard provability operator $\bx{}:\Lang(\PA)\to\Lang(\PA)$ can be defined as
+$$\bx{}\phi := \exists m : Bew(m,\qquote\phi).$$
+We take for granted that $Bew$ exists for $S$ and can be extended to a three-place predicate $Bew(-,-,-) \in \Lang_2(S)$ such that $Bew(m,n,k)$ means that 
+
+\begin{itemize}
+\item $m$ encodes a proof in $S$,
+\item $n$ encodes the statement it proves, and
+\item the proof encoded by $m$ uses at most $k$ characters when written in the language of $S$ ({\em not} when written using the encoding.)
+\end{itemize}
+%
+Then we can define a ``bounded'' box operator:
+$$\bx{k}\phi = \exists m : Bew(m,\qquote{\phi},k).$$
+We also take for granted a computable ``single variable evaluation'' function, $Eval_1:\NN\to\NN$, such that for any $\phi(-)\in\Lang_1(S)$, 
+$$Eval_1(\qquote\phi,k) = \qquote{\phi(\numeral k)}$$
+Since $Eval_1$ is computable, it can be represented in $\Lang(S)$ as in Section \ref{sec:rep}.  
+This allows us to extend the $\bx{k}$ operator to act on sentences $\phi(-)$ with an unbound variable:
+%
+$$(\bx{k}\phi)(\ell) := \exists m : Bew(m,Eval_1(\qquote\phi,\ell),k)$$
+%
+In words, ``There is a proof using $k$ or fewer characters of the formula $\phi(\ell)$''.
+
+\subsection{Basic Properties of \texorpdfstring{$\bx{k}$}{box k}}
+Each of the following properties will be needed multiple times during the proof of Parametric Bounded L\"{o}b.  Since the proof is already highly symbolic, we give these properties English names to recall them. 
+
+\begin{property}[Implication Distribution]
+There is a constant $c\in \Const(S)$ such that for any $p,q\in\Lang(S)$,
+$$\proves{} \forall a\forall b,\; \bx{a}(p\implies q) \implies (\bx{b}p \implies \bx{a+b+c} q).$$
+\end{property}
+
+\begin{proof}[Proof sketch]
+The fact that one can combine a proof of an implication with the proof of its antecedent to obtain a proof of its consequent can be proven in general, with quantified variables in place of the G\"{o}del numbers of the particular statements involved.  Let us suppose this general proof has length $c_0$.  Then, we need only instantiate the statements in it to $p$ and $q$.  However, if $p$ and $q$ are long expressions, they can have been abbreviated in the earlier proofs without lengthening them, so they can be written in abbreviated form again during this step.  Hence, the total cost of combining the two proofs is around $c=2c_0$, which is constant with respect to $p$ and $q$.
+\end{proof}
+
+\begin{property}[Quantifier Distribution]
+There is a constant $C\in \Const(S)$ such that for any $\phi(-) \in \Lang_1(S)$,
+\begin{align*}
+             &\proves{}\bx{N}\left(\forall k \phi(k)\right)\\
+\Implies &\proves{} \forall k \; \bx{C+2N+\lg k} \phi(k)\text{, which in turn}\\
+\Implies &\proves{} \forall k \; \bx{\Oo(\lg k)} \phi(k)
+\end{align*}
+\end{property}
+
+\begin{proof}
+An encoded proof of $\phi(\numeral K)$ for a specific $K$ can be obtained by specializing the conclusion of an $N$-character encoded proof of $\forall k \phi(k)$ and appending the specialization with $\numeral K$ in place of $k$ at the end.  To avoid repeating $\numeral K$ numerous times in the final line (in case it is large), we will use an abbreviation for $\phi$.  Thus the appended lines can say:
+\begin{itemize}
+\item[(1)] let $\Phi$ stand for $\qquote{\phi}$
+\item[(2)] $\Phi(\numeral K)$
+\end{itemize}
+Let us analyze how many characters are needed to write such lines.  First, we need a string $\Phi$ to use as an abbreviation for $\phi$.  Since no string of length $\frac{N}{2}$ has yet been used as an abbreviation in the earlier proof (otherwise we can shorten the proof by not defining and using the abbreviation), we can surely have $\mathrm{Length}(\Phi)<\frac{N}{2}$.  We also need some constant $c$ number of characters to write out the system's equivalent of ``let'', ``stand for'', ``('', and ``)''.  Finally, we need $\lg K$ characters to write $\numeral K$.  Altogether, the proof was extended by $C+N+\lg(k)$ characters, for a total length of $2N+c+\lg k$.  
+\end{proof}
+
+\section{Parametric Bounded L\"{o}b}\label{sec:blob}
+
+\begin{definition}[Proof expansion function]\label{def:E}We choose a computable function $$\Ee:\NN\to\NN$$ bounding the expansion of proof lengths when we G\"{o}del-encode them.  Its definition is that it must be large enough to satisfy the following two properties:
+\end{definition}
+
+\begin{property}[Bounded Necessitation]
+$\forall \phi \in \Lang(S)$,
+\begin{align}
+             &\proves{k} \phi \\
+\Implies &\proves{\Ee (k)} \bx{k} \phi
+\end{align}
+\end{property}
+\begin{property}[Bounded Inner Necessitation]
+For any $\phi \in \Lang(S)$,
+$$\proves{} \bx{k}\phi \implies \bx{\Ee (k)}\bx{k}\phi.$$
+\end{property}
+
+\noindent {\bf Achieving $\Ee(k)\in \Oo(k)$.}  How large must $\Ee$ be in practice?  G\"{o}del numberings for sequences of integers can be achieved in $\Oo(k)$ space~\cite{Tsai:2002} (where $k$ is the length of a standard binary encoding of the sequence), as can G\"{o}del numberings of term algebras~\cite{Tarau:2013}.  To check that one line is an application of Modus Ponens from previous lines, if the proof encoding indexes the implication to which MP is applied, is a test for string equality that is linear in the length the of lines.  Finally, to check that an abbreviation has been applied or expanded, if the proof encoding indexes where the abbreviation occurs, is also a linear time test for string equality.  
+
+Thus, one can straightforwardly achieve $\Ee(k) \in \Oo(k)$ for real-world theorem-provers.  But however large it may be, in any case we have:
+
+\begin{theorem}[Parametric Bounded L\"{o}b]\label{thm:pblob}
+Suppose $p(-)\in\Lang_1(S)$ is a formula with a single unquantified variable, and that $f:\NN \to \NN$ is computable and satisfies $f(k) \succ \Ee(\Oo(\lg k))$.  Then there is a threshold $\hat k \in \NN$, depending on $p(-)$, such that
+\begin{align*}
+             &\proves{} \forall k,\; \bx{f(k)}p(k) \implies p(k)\\
+\Implies &\proves{} \forall k>\hat k, \; p(k)
+\end{align*}
+\end{theorem}
+
+\noindent{\em Note:} In fact a weaker statement
+$$\proves{} \forall k>k_1,\; \bx{f(k)}p(k) \implies p(k)$$
+is sufficient to derive the consequent, since we could just redefine $f(k)$ to be $0$ for $k\leq k_1$ and then $\bx{f(k)}p(k) \implies p(k)$ is vacuously true and provable for $k \leq k_1$ as well.
+
+\begin{proof}
+{\em (In this proof, each centered equation will follow directly from the one above it unless otherwise noted.)}
+
+We begin by choosing some function $g(k)$ such that $\lg k \prec g(k)$ and $\Ee(g(k)) \prec f(k)$.  For example, we could take $g(k) = \floor{\sqrt{(\lg k)(\Ee\- (f(k)))}}$.  Define a predicate $G(-,-)\in\Lang_2(S)$ by
+$$G(n,k) := \left(\exists m : Bew(m,Eval_1(n,k),g(k))\right) \implies p(k)$$
+so that for any $\phi(-)\in\Lang_1(S)$,
+%
+$$G(\qquote\phi,k) = \bx{g(k)}\phi(k) \implies p(k).$$
+%
+Now, by the Parametric Diagonal Lemma, $\exists \psi(-)\in\Lang_1(S)$ such that in some number of characters $n$,
+\eqn{\label{eqn1}
+\proves{n} \forall k \; \psi(k) \iff G(\qquote\psi,k)
+}
+By Bounded Necessitation,
+$$\proves{} \bx{n} \left(\forall k \; \psi(k) \iff G(\qquote\psi,k)\right)$$
+By Quantifier Distribution, since $n$ is constant with respect to $k$,
+$$\proves{} \forall k \; \bx{\Oo(\lg k)} \left(\psi(k) \iff G(\qquote\psi,k)\right),$$
+in which we can specialize to the forward implication,
+$$\proves{} \forall k \; \bx{\Oo(\lg k)} \left(\psi(k) \implies G(\qquote\psi,k)\right)$$
+By Implication Distribution of $\bx{\Oo(\lg k)}$,
+$$\proves{} \forall k \forall a \; \bx{a}\psi(k) \implies \bx{a+\Oo(\lg k)}G(\qquote\psi,k)$$
+By Implication Distribution again, this time of $\bx{a+\Oo(\lg k)}$ over the implication $G(\qquote\psi,k) = \bx{g(k)}\phi(k) \implies p(k)$, we obtain
+$$\proves{} \forall k \forall a \forall b \; \bx{a}\psi(k) \implies 
+\left(\bx{b}\bx{g(k)}\psi(k) \implies \bx{a+b+\Oo(\lg k)}p(k)\right)$$
+Now we specialize this equation to $a=g(k)$ and $b=h(k)$, where $h:\NN\to\NN$ is a computable function satisfying $\Ee (g(k))\prec h(k)\prec f(k)$, for example $h(k) = \floor{\sqrt{f(k)\Ee (g(k))}}$:
+$$\proves{} \forall k \; \bx{g(k)} \psi(k) \implies 
+\left(\bx{h(k)}\bx{g(k)}\psi(k) \implies \bx{g(k)+h(k)+\Oo(\lg k)} p(k)\right)$$
+Then since $g(k)+h(k)+\Oo(\lg k) < f(k)$ after some bound $k > k_1$, we have
+$$\proves{} \forall k>k_1, \; \bx{g(k)}\psi(k) \implies \left(\bx{h(k)}\bx{g(k)}\psi(k) \implies \bx{f(k)} p(k)\right)$$
+Now, by hypothesis, $\proves{} \forall k\; \bx{f(k)}p(k)\implies p(k)$, thus
+\eqn{\label{eqn9}
+\proves{} \forall k>k_1, \; \bx{g(k)}\psi(k) \implies \left(\bx{h(k)}\bx{g(k)}\psi(k) \implies p(k)\right)
+}
+Also, without any of the above, from Bounded Inner Necessitation we can write
+$$\proves{} \forall k \forall a \; \bx{a}\psi(k)\implies \bx{\Ee(a)}\bx{a}\psi(k)$$
+From this, with $a=g(k)$, we have
+$$\proves{} \forall k \; \bx{g(k)}\psi(k)\implies \bx{\Ee(g(k))}\bx{g(k)}\psi(k)$$
+Now, since $\Ee(g(k)) < h(k)$ after some bound $k>k_2$, we have
+\eqn{\label{eqn12}
+\proves{} \forall k > k_2 \; \bx{g(k)}\psi(k)\implies \bx{h(k)}\bx{g(k)}\psi(k)
+}
+Next, from Equations \ref{eqn9} and \ref{eqn12}, assuming we chose $k_2\geq k_1$ for convenience, we have
+\eqn{\label{eqn13}
+\proves{} \forall k>k_2,\; \bx{g(k)}\psi(k)\implies p(k)
+}
+But from Equation \ref{eqn1}, the implication here is equivalent to $\psi(k)$, so we have
+$$ \proves{N} \forall k>k_2,\; \psi(k),$$
+where $N$ is the number of characters needed for the proof above.  From this, by Bounded Necessitation, we have
+$$\proves{} \bx{N} [\forall k>k_2,\; \psi(k)].$$
+By Quantifier Distribution of $\bx{N}$,
+$$\proves{} \forall k>k_2,\; \bx{C + 2N + \lg k} \psi(k)$$
+and since $C + 2N + \lg k < g(k)$ after some bound $k>\hat k$, taking $\hat k \geq k_2$ for convenience, we have
+\eqn{\label{eqn17}
+\proves{}\forall k>\hat k,\; \bx{g(k)}\psi(k).
+}
+Finally, from Equations \ref{eqn13} and \ref{eqn17} we have
+$$\proves{} \forall k>\hat k,\; p(k),$$
+as required.
+\end{proof}
+
+
+\section{Application: Robust Cooperation of Bounded Agents in the Prisoner's Dilemma}
+
+B\'{a}r\'{a}sz, LaVictoire and others~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have exhibited various proof-based agents who robustly cooperate in the Prisoner's Dilemma by basing their decisions on proofs about each others' cooperation.  However, their agents are purely logical entities which can discover proofs of unbounded length, and so are impossible to run on a physical computer.  This leaves open the question of whether such behavior is achievable by agents with bounded computational resources.
+
+So, consider the following bounded agent, where $G:\NN\to\NN$ is a function to be specified later:
+
+%\newpage
+\begin{Verbatim}[frame=single]
+def FairBot_k(Opponent) :
+	let B = k + G(LengthOf(Opponent))
+	search for proof of length at most B that 
+		Opponent(FairBot_k) = Cooperate
+	if found,
+		return Cooperate
+	else
+		return Defect
+\end{Verbatim}
+
+Question: What is $\FB_k(\FB_k)$?  It seems intuitive that each FairBot is waiting for the other to provably cooperate, in a bottomless regression that will exhaust the proof bound B.  Thus, they will find no proof of cooperation, and hence defect.  
+
+However, this turns out not to be the case, as a consequence of Parametric Bounded L\"{o}b.  We let $$p(k) := [\FB_k(\FB_k) = Cooperate].$$
+Since $G\geq 0$, $k \leq B$ in the definition of FairBot, so we have 
+$$\proves{} \bx{k}p(k) \implies \bx{B}p(k).$$
+Now since $\bx{B}p(k)$ is FairBot's criterion for cooperation, we also have 
+$$\proves{} \bx{B}p(k) \implies p(k), \textrm{ \ so}$$ 
+$$\proves{} \forall k, \; \bx{k} p(k) \implies p(k),$$
+whence for sufficiently large $\hat k$, by Parametric Bounded L\"{o}b,
+$$\proves{} \forall k>\hat k,\; p(k).$$
+In other words, $FairBot_k$ cooperates with $FairBot_k$ for large $k$.  
+
+This result is interesting for three reasons:
+
+\begin{itemize}
+\item[1.]  It is surprising.  100\% of the dozens of mathematicians and computer scientists that I've asked to guess the output of $\FB_k(\FB_k)$ have guessed incorrectly (expecting the proof searches to enter an infinite regress and thus reach their bounds), or have given an invalid argument for cooperation (such as ``it would be better to cooperate, so they will").
+\item[2.] It is advantageous. FairBot outperforms the classical Nash/correlated equilibrium solution (Defect, Defect) to the Prisoner's Dilemma, in a one-shot game with no iteration or future reputation.  Moreover, it does so {\em while being unexploitable}: if an opponent will defect against FairBot, FairBot will find no proof of the opponent's cooperation, so it will also defect.  
+\item[3.] It is robust.  Previous examples of cooperative program equilibria studied by \cite{Tennenholtz:2004:Program} and \cite{Fortnow:2009:Program} all involved cooperation based on {\em equality of programs}, a very fragile condition.  Such fragility is not desirable if we wish to build real-world cooperative systems.  
+\end{itemize}
+
+Taking this robustness further, we next demonstrate mutual cooperative program equilibria among a wide variety of (unequal) agents, provided only that they employ a certain ``principle of fairness".  Given a non-negative increasing function $G$, we say that an agent $A_k$ taking a parameter $k \in \NN$ is {\bf G-fair} if for any opponent $Opp$, we have
+$$\proves{} \bx{k+G(\textrm{LengthOf}(Opp))}[Opp(A_k) = C] \implies A_k(Opp) = C,$$
+where $\textrm{LengthOf}(Opp)$ denotes the number of symbols in the opponent's source code.
+
+In other words, if $A_k$ finding a proof that its opponent cooperates is sufficient for $A_k$ to cooperate, we say it is $G$-fair provided the proofs in the search need not exceed length $k+G(\textrm{LengthOf}(Opp))$.  The agents $\FB_k$ defined above are $G$-fair (where $G$ is the function appearing in line $2$ of their source code), and the reader is encouraged to keep them in mind as a motivating example for the following result:
+
+\begin{theorem}[{\bf Robust cooperation of bounded agents}]\label{thm:rc}Suppose that 
+\begin{itemize}
+\item $\Ee(k)$, the proof expansion function of our proof system as defined in Section \ref{sec:blob}, satisfies $\Ee (\Oo(\lg k)) \prec k$, and
+%\item $f$ is any function satisfying $\Ee(\Oo(\lg k)) \prec f(k) \prec k$, and 
+%\item $G$ is any increasing function satisfying $G(\ell) > 6f(2^\ell)$.
+\item $G(\ell)$ is any non-decreasing function satisfying $G(\ell) \succ \Ee(\Oo(\ell)).$
+\end{itemize}
+Then, for any $G$-fair agents $A_k$ and $B_k$, $\exists r \gg 0$ such that for all $m,n>r$,
+$$A_m(B_n) = B_n(A_m) = Cooperate$$
+\end{theorem}
+
+\noindent {\bf Feasibility of bounds.} Before proceeding, recall from Section \ref{sec:blob} that we can achieve $\Ee(k) \in \Oo(k)$ for automatic proof systems that are designed for easy verifiability, in which case $\Ee(\Oo(\lg k)) = \Oo(\lg k)$, well below the $\prec k$ requirement.
+
+\begin{proof}[Proof of Theorem \ref{thm:rc}.]
+For brevity, we let
+\begin{align}
+a(k) &:= G(\mathrm{LengthOf}(A_k)), \\
+b(k) &:= G(\mathrm{LengthOf}(B_k)), \\
+\alpha(m,n) &:= [A_m(B_n) = Cooperate], \text{ and }\\
+\beta(n,m) &:= [B_n(A_m) = Cooperate]
+\end{align}
+so we can write the $G$-fairness conditions more compactly as
+\begin{align}
+\label{eqnC1}     \proves{} &\bx{m+b(n)} \beta(n,m) \implies \alpha(m,n) \text{ and}\\
+\nonumber    \proves{} &\bx{n+a(m)} \alpha(m,n) \implies \beta(n,m).
+\end{align}
+%
+\noindent For later convenience, we also choose a non-decreasing computable function 
+$$f(k) \succ \Ee(\Oo(lg(k)))$$ 
+such that 
+$$6f(2^\ell) \leq G(\ell).$$
+For example, we could take $f(k) = \floor{G(\floor{\lg k})/6}$. 
+
+Now, $\mathrm{LengthOf}(A_k) > \lg k$ and $\mathrm{LengthOf}(B_k) > \lg k$ since they reference the parameter $k$ in their code.  Applying $G$ to both sides yields
+\eqn{\label{eqnC2} a(k),b(k) > G(\lg k) \geq 6f(k).}
+Define an ``eventual cooperation" predicate:
+$$p(k) := \forall m> k,\; \forall n> k, \; \alpha(m,n) \AND \beta(n,m).$$
+Using Quantifier Distribution once on the definition of $p(k)$,
+$$\proves{} \forall k [\bx{f(k)}p(k) \implies \forall m>k, \; \bx{C+2f(k)+\lg m } [\forall n > k, \; \alpha(m,n) \AND \beta(n,m)]]$$
+Applying Quantifier Distribution again,
+\eqn{\label{eqnC2a}\proves{} \forall k [\bx{f(k)}p(k) \implies \forall m>k, \forall n > k, \;  \bx{3C+4f(k)+2\lg m +\lg n }[\alpha(m,n) \AND \beta(n,m)]]}
+Now, for $m,n$ large and $>k$, we have
+\begin{align*}
+3C + \lg n  &< n &&\textrm{ \quad and by (\ref{eqnC2}),}\\
+4f(k) + 2\lg m  < 6f(m) &< a(m). &&
+\end{align*}
+Adding these inequalities yields
+$$3C+4f(k)+2\lg m +\lg n < n+a(m),$$
+so for some $k_1$, from (\ref{eqnC2a}) we derive
+$$\proves{} \forall k>k_1,\; [\bx{f(k)}p(k) \implies \forall m>k, \forall n > k, \;  \bx{n+a(m)}\alpha(m,n)].$$
+Similarly, we also have
+\begin{align*}
+3C + 2\lg m  &< m &&\textrm{ \quad and }\\
+4f(k) + \lg n  < 5f(n) &< b(n), &&\text{ \quad so for some $k_2\geq k_1$,}
+\end{align*}
+$$\proves{} \forall k>k_2 \; [\bx{f(k)}p(k) \implies \forall m>k, \forall n > k, \;  \bx{n+a(m)}\alpha(m,n) \AND \bx{m+b(n)}\beta(n,m)]$$
+Thus by (\ref{eqnC1}),
+$$\proves{} \forall k > k_2 [\bx{f(k)}p(k) \implies \forall m>k, \forall n > k, \;  c(n,m) \AND c(m,n)]\text{, i.e.}$$
+$$\proves{} \forall k > k_2, \; \bx{f(k)}p(k) \implies p(k)$$
+Therefore, by Parametric Bounded L\"{o}b (and the note following it), for some $\hat k$ we have
+$$\proves{} \forall k > \hat k, \; p(k).$$
+In other words, for all $m,n>\hat k + 1$, 
+$$A_m(B_n)=B_n(A_m)=Cooperate.$$
+\end{proof}
+
+\section{An Obstacle to Logical Self-Trust}
+L\"{o}b's Theorem can be viewed as an obstacle to a formal system of logic ``trusting itself'' to soundly prove any statement $p$.  Intuitively, we might like it if a system could ``trust itself about $p$" by proving that "If I prove $p$, then $p$ is true."  But this is just the hypothesis $\proves{} \bx{}p \implies p$ of L\"{o}b's Theorem, whence the conclusion $\bx{}p$ follows, which is undesirable (makes our system unsound) if $p$ turns out to actually be false.
+
+Previously, one might have thought this obstacle was merely a quirk of infinities arising from the the unbounded proof-existence predicate $\bx{}$.  However, we see now that some bounded obstacle remains: namely, that a bounded logical system cannot trust itself ``about moderately long proofs in general".  To see this interpretation, let $p(k)$ be any statement with a free parameter $k$, and $f(k) \succ \lg(k)$ be any function, representing ``moderate largeness''.  Then the hypothesis $\proves{} \forall k, \bx{f(k)} p(k) \implies p(k)$ of Parametric Bounded L\"{o}b's Theorem says that our logical system generally trusts its proofs about $p(k)$, even if they are moderately long.  However, this will imply that $\proves{} \forall k > \hat k, p(k)$, which is bad news if $p(k)$ is sometimes false.
+
+\section{Summary}
+We have exhibited a version of L\"{o}b's Theorem which can be applied to algorithms which read and write proofs using bounded computational resources, such as formal verification software.  This result, in turn, can be used by algorithmic agents that have access to one another's source codes to achieve cooperative outcomes (among other things) that out-perform classical Nash equilibria and correlated equilibria, via conditions that are much more robust than previously known examples depending on program equality (\cite{Tennenholtz:2004:Program}).
+
+As a direction for potential future investigation, it seems inevitable that other agents described in the purely logical (non-computable) setting of  B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} will likely have bounded, algorithmic analogs, and that many more general consequences of L\"{o}b's Theorem---perhaps all the theorems of G\"{o}del--L\"{o}b provability logic---will have resource-bounded analogs as well.
+
+\section{Appendix: String abbreviations in proofs}
+
+In section \ref{sec:system}, we required that our proof system allow the definition and use of abbreviations, because real-world proof systems (such as MetaMath \cite{Megill:2007}) do this, and because it makes our analysis easier.  Abbreviations are just string substitutions which must be replaced by their previously defined values when reading a proof.  For the sake of concreteness, we illustrate this with an example.
+
+Recall the axioms of Peano Arithmetic in first-order logic (FOL):
+\begin{align*}
+P1: \quad & \forall x (Sx \neq 0)\\
+P2: \quad & \forall x \forall y (Sx = Sy \implies x = y)\\
+P3: \quad & \forall x (x + 0 = x)\\
+P4: \quad & \forall x \forall y (x + sy = s(x + y))\\
+P5: \quad & \forall x (x \cdot 0 = 0)\\
+P6: \quad & \forall x \forall y ( x \cdot Sy = (x \cdot y) + x)
+\end{align*}
+along with, for every formula $A(x,\bar y) = A(x,y_1,\ldots,y_k)$, the induction axiom
+$$Ind(A): \quad \forall y_1 \ldots y_k [(A(0,\bar y) \AND (\forall x (A(x,\bar y) \implies A(Sx,\bar y))) \implies \forall x A(x,\bar y))]$$
+
+Below is a proof of the associativity of addition, which does not use abbreviations.  Some sections involving first-order logic are summarized in a single step, but this is not necessary.  This proof uses the induction axiom for the formula
+$A(z) = ((x + y) + z = x + (y + z))$:
+%
+\begin{flalign}
+&\nonumber\textrm{By P3:} \\
+&(x + y) + 0 = x + y\\
+&\nonumber\textrm{By P3:}\\
+&(x + y) + 0 = x + (y + 0)\\
+&\nonumber\textrm{By FOL (substitution):}\\
+&\label{pf:b}(x + y) + z = x + (y + z) \implies S((x + y) + z) = S(x + (y+z))\\
+&\nonumber\textrm{By P4:} \\
+&\label{pf:c}S((x + y) + z) = (x+y) + Sz\\
+&\nonumber\textrm{By FOL (substitution of \ref{pf:c} in \ref{pf:b}):}\\
+&\label{pf:c2}(x + y) + z = x + (y + z) \implies (x+y) + Sz =  S(x + (y + z))\\
+&\nonumber\textrm{By P4:} \\
+&\label{pf:d}S(x+(y+z)) = x + S(y+z)\\
+&\nonumber\textrm{By P4:}\\
+&\label{pf:e}S(y+z) = y+Sz\\
+&\nonumber\textrm{By FOL (substitution of \ref{pf:e} in \ref{pf:d}):}\\
+&\label{pf:f}S(x+(y+z)) = x + (y + Sz)\\
+&\nonumber\textrm{By FOL (substitution of \ref{pf:f} in \ref{pf:c2}):}\\
+&\label{pf:g}(x + y) + z = x + (y + z) \implies (x+y) + Sz = x + (y + Sz)\\
+&\nonumber\textrm{By $Ind(A(z))$ from \ref{pf:g}:}\\
+&\forall x \forall y \forall z ((x + y) + z = x + (y + z))
+\end{flalign}
+
+Part of this proof can be made slightly shorter (in characters) using an abbreviation; see below.  An abbreviation, as it is meant here, is nothing more than a literal string to be replaced by another string upon reading and checking the proof; it has no particular type or grammatical role in the proof language aside from that.  If we chose to give more structure to the types of abbreviations that are allowed, we could make the checking of our proofs more efficient, and indeed, this is done in real-world proof systems like MetaMath \cite{Megill:2007}.  This restriction is not needed for the proofs in this paper, however, so we allow abbreviations to be any literal string substitution for simplicity.
+
+Here is essentially the same proof as a above, using an abbreviation, ``$\%HYP$", defined 
+on the third line of the proof:
+
+\begin{flalign}
+&\nonumber\textrm{By P3:} \\
+&(x + y) + 0 = x + y\\
+&\nonumber\textrm{By P3:}\\
+&(x + y) + 0 = x + (y + 0)\\
+&\nonumber\textrm{Define abbreviation:}\\
+&\label{apf:abb}\%HYP == ``(x + y) + z = x + (y + z)"\\
+&\nonumber\textrm{By FOL (substitution):}\\
+&\label{apf:b}\%HYP \implies S((x + y) + z) = S(x + (y+z))\\
+&\nonumber\textrm{By P4:} \\
+&\label{apf:c}S((x + y) + z) = (x+y) + Sz\\
+&\nonumber\textrm{By FOL (substitution of \ref{apf:c} in \ref{apf:b}):}\\
+&\label{apf:c2}\%HYP \implies (x+y) + Sz =  S(x + (y + z))\\
+&\nonumber\textrm{By P4:} \\
+&\label{apf:d}S(x+(y+z)) = x + S(y+z)\\
+&\nonumber\textrm{By P4:}\\
+&\label{apf:e}S(y+z) = y+Sz\\
+&\nonumber\textrm{By FOL (substitution of \ref{apf:e} in \ref{apf:d}):}\\
+&\label{apf:f}S(x+(y+z)) = x + (y + Sz)\\
+&\nonumber\textrm{By FOL (substitution of \ref{apf:f} in \ref{paf:c2}):}\\
+&\label{apf:g}\%HYP \implies (x+y) + Sz = x + (y + Sz)\\
+&\nonumber\textrm{By Ind(A(z)) from \ref{apf:g}:}\\
+&\forall x \forall y \forall z ((x + y) + z = x + (y + z))
+\end{flalign}
+
+
+\printbibliography
+
+\end{document}
