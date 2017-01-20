@@ -27,29 +27,8 @@
 % Misc Setup
 \setcounter{secnumdepth}{2}
 
-% Standard commands:
-%\DeclareMathOperator*{\argmax}{argmax}
-%\DeclareMathOperator*{\argmin}{argmin}
-%\newcommand{\ch}{\bibstring{chapter}\xspace}
-%\newcommand{\pp}{\bibstring{page}\xspace}
-%\newcommand{\set}[1]{\ensuremath{\{\,#1\,\}}}
-%\newcommand{\any}{\,\cdot\,}
-%\newcommand{\ind}{\,;\,}
-%\newcommand{\Quote}[1]{\ensuremath{\ulcorner#1\urcorner}}
-%\newcommand{\PA}{\ensuremath{\mathcal{P}\!\mathcal{A}}\xspace}
-%\newcommand{\ZF}{\ensuremath{\mathcal{ZF}}\xspace}
-%\newcommand{\RR}{\ensuremath{\mathbb{R}}\xspace}
-%\newcommand{\QQ}{\ensuremath{\mathbb{Q}}\xspace}
-%\newcommand{\PP}{\ensuremath{\mathbb{P}}\xspace}
-%\newcommand{\EE}{\ensuremath\mathbb{E}}
-%\newcommand{\Algorithm}[1]{Algorithm~\ref{alg:#1}}
-%\newcommand{\Figure}[1]{Figure~\ref{fig:#1}}
-%\newcommand{\Rule}[1]{Desideratum~\ref{rule:#1}}
-%\newcommand{\Section}[1]{Section~\ref{sec:#1}}
-%\newcommand{\Table}[1]{Table~\ref{tab:#1}}
-%\newcommand{\Theorem}[1]{Theorem~\ref{thm:#1}}
-%\newcommand{\eq}[1]{\eqref{eq:#1}}
-%\newcommand{\Equation}[1]{equation \eq{#1}}
+%Commenting command:
+\newcommand{\bred}[1]{{\color{red}{#1}}}
 
 %Paper-specific commands:
 \newtheorem{theorem}{Theorem}
@@ -116,109 +95,23 @@ These results have implications for the game theory of bounded agents who are ab
 \end{abstract}
 
 \section{Introduction}\label{sec:bo}
-Since the main results of this paper hinge on proving a generalization of L\"{o}b's theorem, we begin by recalling L\"{o}b's Theorem itself in this introduction, and briefly discussing why a version of the theorem for logical proof systems with bounded computational resources is particularly interesting.   
-Sections \ref{sec:fund} through \ref{sec:fund} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:pbob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
-
-%The arc of this paper begins and ends with a discussion of the Prisoner's Dilemma, but it passes through a new result in provability logic.  Thus, it will hopefully be of interest to game theorists and logicians alike.
-%
-%\subsection{Open-source Prisoner's Dilemma}
-%
-%Consider the Prisoner's Dilemma, a game with two possible actions C (Cooperate) and D (Defect), with the following payoff matrix:
-%
-%  \begin{table}[ht]
-%  \centering
-%    \setlength{\extrarowheight}{2pt}
-%    \begin{tabular}{cc|c|c|}
-%      & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}\\
-%      & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$C$}  & \multicolumn{1}{c}{$D$} \\\cline{3-4}
-%      \multirow{2}*{Player $1$}  & $C$ & $(2,2)$ & $(0,3)$ \\\cline{3-4}
-%      & $D$ & $(3,0)$ & $(1,1)$ \\\cline{3-4}
-%    \end{tabular}
-%  \end{table}
-%
-%\noindent In other words, by choosing $D$ over $C$, each player can destroy 2 units of its opponent's utility to gain 1 unit of its own.  As long as the payoffs are truly represented in the matrix---for example, there are no reputational costs of choosing $D$ that are not already imputed in the payoffs---then $(D,D)$ is the only Nash equilibrium, and the only correlated equilibrium.  In fact, irrespective of the opponent's move, it is better to defect.  It is therefore broadly believed that $(D,D)$ is an inevitable outcome between ``rational'' agents in a truly represented (non-iterated) Prisoner's Dilemma.  
-%
-%But consider a version of the game --- as first studied by \cite{Tennenholtz:2004:Program} --- wherein each player is an algorithm which can read its opponent's source code, as well as its own, before the game.  Is $D$ still the obvious correct strategy?  As a warm-up, one can imagine designing various algorithmic ``agents'' to compete in such games.  For example, an agent who always cooperates:
-%
-%\begin{Verbatim}[frame=single]
-%def CooperateBot(Opponent) :
-%	return C
-%\end{Verbatim}
-%
-%Tenenholtz \cite{Tennenholtz:2004:Program} considers a simple agent which cooperates if and only if the opponent is identitically equal to itself:
-%
-%\begin{Verbatim}[frame=single]
-%def IsMeBot(Opponent) :
-%	if Opponent=IsMeBot
-%		return C
-%	else
-%		return D
-%\end{Verbatim}
-%
-%When playing against IsMeBot, the opponent is incentivized to ``be IsMeBot'', and in particular, cooperate.  To capture this intuition, Tenenholtz defines a {\em \bf program equilibrium} to be a pair of agents (programs) competing in a game, with access to one another's source code, such that replacing either agent by a different agent would decrease its expected payoff.  Thus, a program equilibrium is a Nash equilibrium of the `meta-game' of choosing which program to play.  
-%
-%Agents in a program equilibrium can return outputs that do not constitute a Nash equilibrium (of the object-level game), even in a one-shot game, as can be seen here: (IsMeBot,IsMeBot) is a program equilibrium, returning outputs (C,C) and payoffs (2,2).  This program equilibrium of IsMeBot is highly fragile, however: if we let IsMeBot' be the same program but with a tiny irrelevant change to its code --- a comment perhaps --- then IsMeBot will defect against it.  Agents studied by \cite{Fortnow:2009:Program} are similarly fragile.
-%
-%To the end of someday designing real-world cooperative agents, it is therefore interesting to design a more ``robust'' cooperative agent, whose behavior does not depend too heavily on the details of the implementation of its opponent, but which nonetheless incentivizes its opponent to cooperate.  For this, consider:
-%
-%\begin{Verbatim}[frame=single]
-%def FairBot_k(Opponent) :
-%	search for a proof of length k that  
-%		Opponent(FairBot_k) = C
-%	if found,
-%		return C
-%	else
-%		return D
-%\end{Verbatim}
-%
-%\noindent Here a `proof of length k' means a mathematical proof --- say, in some implementation of Peano Arithmetic --- using fewer than $k$ characters (symbols) to write out as a text file.  To begin thinking about these agents, observe that
-%
-%\begin{itemize}
-%\item $\CB(\FB_k) = C$, because $\CB$ always returns $C$;
-%\item $\FB_k(\CB) = C$ when $k$ is large enough to complete the shortest proof that $\CB(\FB_k)=C$ (which, given the simplicity of $\CB$, will be very short), and $D$ when $k$ is too small to complete the proof.
-%
-%\end{itemize}
-%
-%\subsection{The Example of FairBot vs FairBot}
-%
-%\noindent The first interesting question that arises is then:
-%
-%\begin{center}
-%What is $\FB_k(\FB_k)$?
-%\end{center}
-%
-%\noindent It is not so hard to see that if $k$ is too small to complete any proofs, each FairBot returns $D$.  But suppose $k$ is extremely large, for example, $10^{100}$.  Does $\FB_k(\FB_k)$ find a proof that $\FB_k(\FB_k)=C$ and therefore return $C$, validating the proof?  Or does it continue searching for a proof that $\FB_k(\FB_k)=C$ until the proof bound is reached, and having found no such proof, return $D$, consistent with the failed proof search?
-%
-%It is worth pausing a moment to reflect on this question, since, when given no hints, 100\% of the dozens of mathematicians and computer scientists I've seen asked it have answered incorrectly at first (myself included).
-%
-%Consider that each instance of $\FB_k$ is waiting for a proof that the other $\FB_k$ will return $C$ before it will return $C$ itself, and since neither algorithm has a clause in its code to take a ``leap of faith'' in such a situation, it seems that neither algorithm will ``make the first move'', so their proof searches must simply keep searching until they reach their limit $k$ and return $D$.
-%
-%However, this reasoning turns out to be incorrect, because of a version of L\"{o}b's Theorem that is the main result of this paper, proven in Section \ref{sec:blob}.  It implies that $\FB_k(\FB_k) = C$ for large $k$.  Aside from being surprising, this result opens up a whole class of behaviors that can outperform the classical $(D,D)$ equilibrium in a truly formulated, non-iterated Prisoner's Dilemma.  Moreover, this performance can be made more robust, into a statement about any two agents willing to cooperate based on a proof of their opponents' cooperation.
-%
-%Such interesting ``L\"{o}bian" behavior first seemed plausible from the work of B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob}, who illustrated something like program equilibria among certain non-computable logical entities they called ``modal agents'', including an analog of FairBot in that context. 
-%
-%\subsection{Robust Cooperative Program Equilibria}
-%
-%The main application of this paper is to establish robust cooperative program equilibria for computationally bounded agents.  In particular, it is possible to write algorithms which are unexploitable in a Prisoner's Dilemma---that is, they never receive the undesirable outcome $(C,D)$ as Player 1---and which achieve the outcome $(C,C)$ against a variety of opponents, such that there is no incentive for their opponents to deviate from cooperation, even though there is no iteration or reputation to be earned in the game.  This is what we mean by ``robust cooperation''.
-%
-%To summarize the result, we write $\bx{k}p$ for the statement ``$p$ can be proven using $k$ or fewer written symbols''.
-%Given a nonnegative increasing function $G$, we say that an agent $A_k$ taking a parameter $k \in \NN$ is {\bf G-fair} if
-%$$\proves{} \bx{k+G(\textrm{LengthOf}(Opp))}[Opp(A_k) = Cooperate] \implies A_k(Opp) = Cooperate$$
-%In other words, if $A_k$ finding a proof that its opponent cooperates is sufficient for $A_k$ to cooperate, we say it is $G$-fair, provided the proof lengths in the search did not exceed $k+G(\textrm{LengthOf}(Opp))$.  Then we have, in terms to be made precise later,
-%
-%\begin{theorem*}[{\bf Robust cooperation of bounded agents}] If certain bounds are satisfied by the G\"{o}del encoding of our proof system, and the function $G$ exceeds a certain asymptotic lower bound, then for any $G$-fair agents $A_k$ and $B_k$, we have for all sufficiently large $m,n$,
-%$$A_m(B_n) = B_n(A_m) = Cooperate$$
-%\end{theorem*}
-%
-%This result depends crucially on a new version of L\"{ob}'s Theorem.
-% 
 
 L\"{o}b's Theorem states that, if $\bx{}p$ denotes the provability of statement $p$ in Peano Arithmetic (or any extension of it), then 
-$$\bx{}(\bx{}p \implies p) \implies \bx{}p$$
-If the reader has never encountered this result, consider the case where $p$ is the Riemann Hypothesis, $RH$.  Suppose that the Riemann Hypothesis is, unbeknownst to us, false.  Without yet knowing whether $RH$ is true, it is tempting for us to claim at least that {\em if RH is provable, then RH is true}, i.e. $\bx{}RH \implies RH$.  However, if that claim were itself provable, i.e. if $\bx{}(\bx{}RH \implies RH)$, then L\"{o}b's Theorem tells us that $\bx{}RH$---the Riemann Hypothesis is provable---which is bad news for the soundness of our proof system if the Riemann Hypothesis is actually false.  Thus, L\"{o}b's Theorem defies the intuition that we might soundly prove the ``self-trust'' statement that {\em if we prove $p$, then $p$ is true}.  Indeed, when $p$ is the statement ``$1=0$'', L\"{o}b's Theorem reduces to G\"{o}del's First Incompleteness Theorem: that arithmetic cannot prove its own soundness.
+\[
+\bx{}(\bx{}p \implies p) \implies \bx{}p.
+\]
+This result defies the intuition that we might soundly prove the ``self-trust'' statement that {\em if we prove $p$, then $p$ is true}.  Indeed, when $p$ is the statement ``$1=0$'', L\"{o}b's Theorem reduces to G\"{o}del's First Incompleteness Theorem: that arithmetic cannot prove its own consistency.
+
+If we would ever hope to apply L\"{o}b's Theorem to the analysis of real-world algorithms which analyze other algorithms, such as compilers or formal verification software, a version taking into account computational resource bounds is needed.  In particular, there will be some bound (measured in characters) on the length of the longest proof the system can write or validate.
+
+
+\bred{Plan: elaborate on: some questions have already arisen that are in want of such a resource-bounded version}
+
+But what if we restrict attention to claims about proofs of bounded length?  Is there then some sense in which self-trust can be recovered?  
+
 
 \subsection{The need for a resource-bounded version} 
-If we would ever hope to apply L\"{o}b's Theorem to the analysis of real-world algorithms which analyze other algorithms, such as compilers or formal verification software, a version taking into account computational resource bounds is needed.  In particular, there will be some bound (measured in characters) on the length of the longest proof the system can write or validate.
+
 
 In addition, work of B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have found that L\"{o}b's Theorem can be be used to design logical entities that resemble ``agents'' which achieve robust cooperative equilibria in games such as the Prisoner's Dilemma.  However, these ``modal agents'' were defined as uncomputable logical functions, and to exhibit computable versions, a resource-bounded version of L\"{o}b's Theorem is required.
 
@@ -233,6 +126,8 @@ Suppose $p(-)$ is a logical formula with a single unquantified variable, and tha
 \end{theorem*}
 
 
+Since the main results of this paper hinge on proving a generalization of L\"{o}b's theorem, we begin by recalling L\"{o}b's Theorem itself in this introduction, and briefly discussing why a version of the theorem for logical proof systems with bounded computational resources is particularly interesting.   
+Sections \ref{sec:fund} through \ref{sec:fund} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:pbob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
 
 \section{Fundamentals}\label{sec:fund}
 
