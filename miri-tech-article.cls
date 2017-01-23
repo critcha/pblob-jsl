@@ -1,6 +1,6 @@
-%Filename: miri-tech-article.sty
+%Filename: miri-tech-article.cls
 % This style is inspired by the AAAI style
-\ProvidesClass{miri-tech-article}[2014/12/01 Article for Machine Intelligence Research Institute]
+\ProvidesClass{miri-tech-article}[2016/11/16 Article for Machine Intelligence Research Institute]
 \LoadClass[letterpaper]{article}
 
 % Input encoding
@@ -154,6 +154,7 @@
 \def\copyrighttext#1{\gdef\copyright@on{T}\gdef\copyright@text{#1}}
 \def\publishingnote#1{\gdef\copyright@on{T}\gdef\copyright@text{Research supported by the Machine Intelligence Research Institute (intelligence.org). #1}}
 \def\copyrightyear#1{\gdef\copyright@on{T}\gdef\copyright@year{#1}}
+\def\customnote#1{\gdef\copyright@on{T}\gdef\copyright@text{#1}}
 % gf: End changes for copyright notice (used in \maketitle, below)
 
 % Title stuff, taken from deproc.
@@ -174,7 +175,7 @@
 \setcounter{footnote}{0}
 
 \let\maketitle\relax \let\@maketitle\relax
-\gdef\@thanks{}\gdef\@author{}\gdef\@title{}\let\thanks\relax}
+\gdef\@thanks{}\gdef\@author{}\gdef\@title{}\gdef\@date{}\let\thanks\relax}
 
 %Option for many authors - toggles between standard author markup and authblk package.
 \if@authblk
@@ -187,6 +188,8 @@
     \linewidth\hsize \vskip 0.625in minus 0.125in \centering
     {\Large\bf \@title \par} \vskip 0.2in plus 1fil minus 0.1in
     {\@author \par}
+    \vskip 0.15in plus 1fil minus 0.125in
+    {\small\@date}
     \vskip 0.3in plus 2fil minus 0.1in
     }
     \if@toc
@@ -213,7 +216,8 @@
     \hbox to 0pt\bgroup\hss \begin{tabular}[t]{c}\normalsize\bf\@author \par
     \end{tabular}\hss\egroup
     \hfil\hfil\egroup}
-
+    \vskip 0.15in plus 1fil minus 0.125in
+    {\small\@date}
     \vskip 0.3in plus 2fil minus 0.1in
     }
     \if@toc
@@ -222,6 +226,8 @@
     \fi
     }
 \fi
+  \global\let\@date\@empty
+
 %End of title/author stuff
 
 \renewenvironment{abstract}{\centerline{\bf
