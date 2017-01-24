@@ -80,7 +80,7 @@
 %\newcommand{\Red}[1]{{\color{red}#1}}
 
 % Document Title
-\title{Parametric Bounded L\"{o}b's Theorem and Robust Cooperation of Bounded Agents}
+\title{A parametric resource-bounded generalization of L\"{o}b's Theorem, with applications to open-source game theory.}
 
 % Authors
 \author{Andrew Critch \\ Machine Intelligence Research Institute \\ critch@intelligence.org}
@@ -113,7 +113,7 @@ Previous work of Pudl\'{a}k~\cite{Pudlak:1998} on provability of finitistic cons
 
 \bred{elaborate}, and in fact this paper proves a version that suits both of the above use cases:
 
-\begin{theorem*}[Parametric Bounded L\"{o}b]
+\begin{theorem*}[Parametric Bounded L\"{o}b's Theorem]
 Suppose $p(-)$ is a logical formula with a single unquantified variable, and that $f:\NN \to \NN$ is computable and  exceeds a certain asymptotic lower bound.  Then $\exists\hat k$ :
 \begin{align*}
              &\proves{} \forall k,\; \bx{f(k)}p(k) \implies p(k)\\
@@ -153,7 +153,7 @@ and additionally allow ourselves to write numbers in a binary format, and allow 
 \end{itemize}
 For concreteness, an illustration of a proof using abbreviations is given in the Appendix.
 
-\noindent Abbreviations are allowed in the proof system for two reasons.  The first is that real-world automated proof systems will tend to use abbreviations because of memory constraints.  The second is that abbreviations make the lengths of shortest-proofs in this system slightly easier to analyze.  For example, if a number $N$ with a very large number of digits occurs in the shortest proof of a proposition, it will not occur multiple times; instead, it will occur only once, in the definition of an abbreviation for it.  Then, one does not need to carefully count the number of times the numeral occurs in the proof to determine its contribution to the proof length; its contribution will simply be linear in its length, or $\lg N$.
+Abbreviations are allowed in the proof system for two reasons.  The first is that real-world automated proof systems will tend to use abbreviations because of memory constraints.  The second is that abbreviations make the lengths of shortest-proofs in this system slightly easier to analyze.  For example, if a number $N$ with a very large number of digits occurs in the shortest proof of a proposition, it will not occur multiple times; instead, it will occur only once, in the definition of an abbreviation for it.  Then, one does not need to carefully count the number of times the numeral occurs in the proof to determine its contribution to the proof length; its contribution will simply be linear in its length, or $\lg N$.
 
 Write 
 \begin{itemize}
@@ -245,7 +245,7 @@ $$(\bx{k}\phi)(\ell) := \exists m : Bew(m,Eval_1(\qquote\phi,\ell),k)$$
 In words, ``There is a proof using $k$ or fewer characters of the formula $\phi(\ell)$''.
 
 \subsection{Basic Properties of \texorpdfstring{$\bx{k}$}{box k}}
-Each of the following properties will be needed multiple times during the proof of Parametric Bounded L\"{o}b.  Since the proof is already highly symbolic, these properties are given English names to recall them. 
+Each of the following properties will be needed multiple times during the proof of the main result.  Since the proof is already highly symbolic, these properties are given English names to recall them. 
 
 \begin{property}[Implication Distribution]
 There is a constant $c\in \Const(S)$ such that for any $p,q\in\Lang(S)$,
@@ -274,7 +274,7 @@ An encoded proof of $\phi(\numeral K)$ for a specific $K$ can be obtained by spe
 Let us analyze how many characters are needed to write such lines.  First, a string $\Phi$ is needed to use as an abbreviation for $\phi$.  Since no string of length $\frac{N}{2}$ has yet been used as an abbreviation in the earlier proof (otherwise one can shorten the proof by not defining and using the abbreviation), we can surely have $\mathrm{Length}(\Phi)<\frac{N}{2}$.  We also need some constant $c$ number of characters to write out the system's equivalent of ``let'', ``stand for'', ``('', and ``)''.  Finally, we need $\lg K$ characters to write $\numeral K$.  Altogether, the proof was extended by $C+N+\lg(k)$ characters, for a total length of $2N+c+\lg k$.  
 \end{proof}
 
-\section{Parametric Bounded L\"{o}b}\label{sec:blob}
+\section{A bounded generalization of L\"{o}b's theorem}\label{sec:blob}
 
 \begin{definition}[Proof expansion function]\label{def:E}We choose a computable function $$\Ee:\NN\to\NN$$ bounding the expansion of proof lengths when we G\"{o}del-encode them.  Its definition is that it must be large enough to satisfy the following two properties:
 \end{definition}
@@ -486,8 +486,8 @@ $$A_m(B_n)=B_n(A_m)=Cooperate.$$
 \end{proof}
 
 
-\section{Summary}
-We have exhibited a version of L\"{o}b's Theorem which can be applied to algorithms which read and write proofs using bounded computational resources, such as formal verification software.  This result, in turn, can be used by algorithmic agents that have access to one another's source codes to achieve cooperative outcomes (among other things) that out-perform classical Nash equilibria and correlated equilibria, via conditions that are much more robust than previously known examples depending on program equality (\cite{Tennenholtz:2004:Program}).
+\section{Conclusion}
+A bounded generalization of L\"{o}b's Theorem has been exhibited that can be applied to algorithms which read and write proofs using bounded computational resources, such as formal verification software.  This result, in turn, can be used by algorithmic agents that have access to one another's source codes to achieve cooperative outcomes (among other things) that out-perform classical Nash equilibria and correlated equilibria, via conditions that are much more robust than previously known examples depending on program equality (\cite{Tennenholtz:2004:Program}).
 
 As a direction for potential future investigation, it seems inevitable that other agents described in the purely logical (non-computable) setting of  B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} will likely have bounded, algorithmic analogs, and that many more general consequences of L\"{o}b's Theorem---perhaps all the theorems of G\"{o}del--L\"{o}b provability logic---will have resource-bounded analogs as well.
 
@@ -495,7 +495,7 @@ As a direction for potential future investigation, it seems inevitable that othe
 
 \section{Inspiration: a modal proof of L\"{o}b's Theorem}
 
-The proof of our bounded version of L\"{o}b's Theorem was inspired by a particular proof of L\"{o}b's original theorem using a few simple properties of $\Box$, along with the classical Diagonal Lemma~\cite{Carnap:1934}.\footnote{Thanks to Professor Leo Harrington for the advice to include this proof as a way of motivating the remainder of the paper.}
+The proof of our bounded version of L\"{o}b's Theorem is analogous to a modal proof of L\"{o}b's original theorem using a few simple properties of $\Box$, along with the classical Diagonal Lemma~\cite{Carnap:1934}.\footnote{Thanks to Professor Leo Harrington for the advice to include this proof as a way of motivating the remainder of the paper.}
 
 \begin{itemize}
 \item {\bf Necessitation:} From $\vdash A$ conclude $\vdash \Box A$: Informally, this says that if A is a theorem, then it is provable.
