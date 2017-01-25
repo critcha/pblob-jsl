@@ -1,12 +1,34 @@
-\documentclass[onecolumn]{miri-tech-article}
+\documentclass[jsl,reqno,bibay2]{asl}
+\usepackage{rotate}
 
-% Bibliography File(s)
-\addbibresource{MIRIPublications.bib}
-\addbibresource{Inbox.bib}
-\addbibresource{General.bib}
+\def\confname{}
+\def\copyrightyear{}
+
+\usepackage{verbatimbox}
+\usepackage{fancyvrb}
+
+%Contrary to a popular practice, only PROPER NAMES are set in uppercase in ASL publications
+%short title for running head precedes the full title in [ ] braces.
+\title[A parametric resource-bounded generalization of L\"{o}b's Theorem]{A parametric resource-bounded generalization of L\"{o}b's Theorem, with applications to open-source game theory}
+
+\author{Andrew Critch}
+\revauthor{Critch, Andrew}
+
+\address{Machine Intelligence Research Institute \\ 2030 Addison Street, Berkeley, CA, USA 94704}
+
+\email{critch@intelligence.org}
+
+\urladdr{http://intelligence.org/}
+
+%\thanks{}
 
 % Paper-Specific Packages
-\usepackage{amsmath,amsthm,amsfonts}
+%NOTE: asl.cls loads amsmath packages by default.
+%Not compatible with biblatex or natbib!
+%\usepackage{algorithm2e}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+%\usepackage{amsmath,amsthm,amsfonts}
 %\usepackage{mdwlist}
 %\usepackage[ruled,vlined,noend]{algorithm2e}
 %\usepackage{tikz}
@@ -16,18 +38,18 @@
 %\usetikzlibrary{positioning,intersections}
 %\usepackage{microtype}
 %\usepackage{accents}
-%\usepackage{color}
-\usepackage{verbatimbox}
-\usepackage{fancyvrb}
-\usepackage{mathtools}
-\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
-\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\usepackage{color}
+%\usepackage{mathtools}
 \usepackage{multirow,array}
 %\usepackage{float}
 %\restylefloat{table}
 
-% Misc Setup
-\setcounter{secnumdepth}{2}
+%revised non-mathtools commands
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+%\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+%\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
 
 %Commenting command:
 \newcommand{\bred}[1]{{\color{red}{#1}}}
@@ -79,23 +101,31 @@
 
 %\newcommand{\Red}[1]{{\color{red}#1}}
 
-% Document Title
-\title{A parametric resource-bounded generalization of L\"{o}b's Theorem, with applications to open-source game theory}
 
-% Authors
-\author{Andrew Critch \\ Machine Intelligence Research Institute \\ critch@intelligence.org}
+%natbib facsimile commands
+\makeatletter
+  \def\citet{\@ifnextchar[{\@witht}{\@withoutt}}%
+  \def\@witht[#1]#2{\citeauth{#2}~\citeyear[#1]{#2}}%
+  \def\@withoutt#1{\citeauth{#1}~\citeyear{#1}}%
+  \def\citep{\@ifnextchar[{\@withp}{\@withoutp}}%
+  \def\@withp[#1]#2{[\!\!\citeauth{#2},~\citeyear[#1]{#2}]}%
+  \def\@withoutp#1{[\!\!\citeauth{#1},~\citeyear{#1}]}%
+\makeatother
+  \newcommand{\citeyearpar}[1]{\citeyear{#1}}
+  \newcommand{\mkbibparens}[1]{(#1)}
+  \newcommand{\mkbibquote}[1]{``#1''}
+  \newcommand{\ch}{chap.\xspace}
+  \newcommand{\pp}{page\xspace}
+
 
 \begin{document}
-
-%\nocopyright % Optional – Use this to prevent any copyright notice from appearing.
-\publishingnote{}
-
-\maketitle
 
 \begin{abstract}
 L\"{o}b's Theorem makes predictions about the behavior of self-reflective systems with unbounded computational resources with which to write and evaluate proofs.  However, in the real world, self-reflective systems will have limited memory and processing speed, so this paper introduces a bounded version of L\"{o}b's Theorem which is applicable given such resource limitations.  
 These results have implications for the game theory of bounded agents who are able to write proofs about themselves and one another, including the capacity to out-perform classical Nash equilibria and correlated equilibria, attaining mutually cooperative program equilibrium in the Prisoner's Dilemma.
 \end{abstract}
+
+\maketitle
 
 \section{Introduction}\label{sec:bo}
 
@@ -107,9 +137,9 @@ This result defies the intuition that we might soundly prove the ``self-trust'' 
 
 If we would ever hope to apply L\"{o}b's Theorem to the analysis of real-world algorithms which analyze other algorithms, such as compilers or formal verification software, a version taking into account computational resource bounds is needed.  In particular, given any such system, there will be some bound (measured in characters) on the length of the longest proof that it can write or validate.
 
-Some need has already arisen for a resource-bounded version of L\"{o}b's theorem: in the game theory of agents who can read on another's source code.  Work of B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have found that L\"{o}b's Theorem can be be used to design logical entities that resemble ``agents'' which achieve robust cooperative equilibria in games such as the Prisoner's Dilemma.  However, these ``modal agents'' were defined as uncomputable logical functions, and to exhibit computable versions, a resource-bounded version of L\"{o}b's Theorem is required.
+Some need has already arisen for a resource-bounded version of L\"{o}b's theorem: in the game theory of agents who can read on another's source code.  Work of B\'{a}r\'{a}sz~\citeyear{Barasz:2014:robust} and LaVictoire et al.~\citeyear{LaVictoire:2014:program} have found that L\"{o}b's Theorem can be be used to design logical entities that resemble ``agents'' which achieve robust cooperative equilibria in games such as the Prisoner's Dilemma.  However, these ``modal agents'' were defined as uncomputable logical functions, and to exhibit computable versions, a resource-bounded version of L\"{o}b's Theorem is required.
 
-Previous work of Pudl\'{a}k~\cite{Pudlak:1998} on provability of finitistic consistency statements were suggestive that such a result might be possible \bred{(I will need to elaborate this)}, and in fact this paper proves a version that suits both of the above use cases:
+Previous work of \cite{Pudlak:1998} on provability of finitistic consistency statements were suggestive that such a result might be possible \bred{(I will need to elaborate this)}, and in fact this paper proves a version that suits both of the above use cases:
 
 \begin{theorem*}[Parametric Bounded L\"{o}b's Theorem]
 Suppose $p(-)$ is a logical formula with a single unquantified variable, and that $f:\NN \to \NN$ is computable and  exceeds a certain asymptotic lower bound.  Then $\exists\hat k$ :
@@ -119,14 +149,14 @@ Suppose $p(-)$ is a logical formula with a single unquantified variable, and tha
 \end{align*}
 \end{theorem*}
 
-\paragraph{Outline.} Sections \ref{sec:fund} through \ref{sec:bpp} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:pblob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
+\paragraph{Outline.} Sections \ref{sec:fund} through \ref{sec:bpp} are devoted to proving this bounded generalization of L\"{o}b's Theorem, and Sections \ref{sec:blob} and \ref{sec:selftrust} explore its consequences for the robust cooperation of bounded agents and for the ``self-trust" of bounded logical proof systems.
 
 \section{Fundamentals}\label{sec:fund}
 
 Since this paper draws from work in several disciplines, this section is provided to clarify the use of notation and conventions throughout.
 
 \paragraph{Proof length conventions and notation.}
-If the first line of a three-line proof is so long that it would not fit on any physical computer system, saying the proof is ``only three lines long'' is not very descriptive.  Therefore, proof length will be measured in {\em characters} instead of lines, the way one might measure the size of a text file on a computer.  An extensive analysis of proof lengths measured in characters is covered by Pudl\'{a}k~\cite{Pudlak:1998}.
+If the first line of a three-line proof is so long that it would not fit on any physical computer system, saying the proof is ``only three lines long'' is not very descriptive.  Therefore, proof length will be measured in {\em characters} instead of lines, the way one might measure the size of a text file on a computer.  An extensive analysis of proof lengths measured in characters is covered by \cite{Pudlak:1998}.
 
 Throughout this paper, $S$ refers to a fixed proof system (e.g. an extension of Peano Arithmetic).  Writing
 $$S \proves{n} \phi, \quad \text{or simply} \quad \proves{n} \phi$$
@@ -173,7 +203,7 @@ $$\qquote{\phi}:=\numeral \# \phi$$
 which allows $S$ to write proofs about itself.
 
 \paragraph{Representing computable functions.}\label{sec:rep}
-It is known (see, e.g.\ Theorem 6.8 of Cori and Lascar, Part II~\cite{Cori:2001}) that for any computable function $f:\NN\to\NN$, there exists a ``graph'' predicate $\Gamma_f(-,-)\in\Lang_2(\PA)$ such that
+It is known (see, e.g.\ Theorem 6.8 of \cite[Part II]{Cori:2001}) that for any computable function $f:\NN\to\NN$, there exists a ``graph'' predicate $\Gamma_f(-,-)\in\Lang_2(\PA)$ such that
 %
 $$\forall x\in\NN, \; \PA \proves{} \forall y, \; \Gamma_f(\numeral x,y) \iff y = \numeral f(x)$$
 
@@ -289,7 +319,7 @@ For any $\phi \in \Lang(S)$,
 $$\proves{} \bx{k}\phi \implies \bx{\Ee (k)}\bx{k}\phi.$$
 \end{property}
 
-\noindent {\bf Achieving $\Ee(k)\in \Oo(k)$.}  How large must $\Ee$ be in practice?  G\"{o}del numberings for sequences of integers can be achieved in $\Oo(k)$ space~\cite{Tsai:2002} (where $k$ is the length of a standard binary encoding of the sequence), as can G\"{o}del numberings of term algebras~\cite{Tarau:2013}.  To check that one line is an application of Modus Ponens from previous lines, if the proof encoding indexes the implication to which MP is applied, is a test for string equality that is linear in the length the of lines.  Finally, to check that an abbreviation has been applied or expanded, if the proof encoding indexes where the abbreviation occurs, is also a linear time test for string equality.  
+\noindent {\bf Achieving $\Ee(k)\in \Oo(k)$.}  How large must $\Ee$ be in practice?  G\"{o}del numberings for sequences of integers can be achieved in $\Oo(k)$ space~\citep{Tsai:2002} (where $k$ is the length of a standard binary encoding of the sequence), as can G\"{o}del numberings of term algebras~\citep{Tarau:2013}.  To check that one line is an application of Modus Ponens from previous lines, if the proof encoding indexes the implication to which MP is applied, is a test for string equality that is linear in the length the of lines.  Finally, to check that an abbreviation has been applied or expanded, if the proof encoding indexes where the abbreviation occurs, is also a linear time test for string equality.  
 
 Thus, one can straightforwardly achieve $\Ee(k) \in \Oo(k)$ for real-world theorem-provers.  But however large it may be, in any case we have:
 
@@ -376,7 +406,7 @@ Previously, one might have thought this obstacle was merely a quirk of infinitie
 \subsection{Application: Robust Cooperation of Bounded Agents in the Prisoner's Dilemma}
 \label{sec:robucoop}
 
-B\'{a}r\'{a}sz, LaVictoire and others~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} have exhibited various proof-based agents who robustly cooperate in the Prisoner's Dilemma by basing their decisions on proofs about each others' cooperation.  However, their agents are purely logical entities which can discover proofs of unbounded length, and so are impossible to run on a physical computer.  This leaves open the question of whether such behavior is achievable by agents with bounded computational resources.
+B\'{a}r\'{a}sz~\citeyear{Barasz:2014:robust}, LaVictoire~\citeyear{LaVictoire:2014:program}, and others have exhibited various proof-based agents who robustly cooperate in the Prisoner's Dilemma by basing their decisions on proofs about each others' cooperation.  However, their agents are purely logical entities which can discover proofs of unbounded length, and so are impossible to run on a physical computer.  This leaves open the question of whether such behavior is achievable by agents with bounded computational resources.
 
 So, consider the following bounded agent, where $G:\NN\to\NN$ is a function to be specified later:
 
@@ -485,15 +515,15 @@ $$A_m(B_n)=B_n(A_m)=Cooperate.$$
 
 
 \section{Conclusion}
-A bounded generalization of L\"{o}b's Theorem has been exhibited that can be applied to algorithms which read and write proofs using bounded computational resources, such as formal verification software.  This result, in turn, can be used by algorithmic agents that have access to one another's source codes to achieve cooperative outcomes (among other things) that out-perform classical Nash equilibria and correlated equilibria, via conditions that are much more robust than previously known examples depending on program equality (\cite{Tennenholtz:2004:Program}).
+A bounded generalization of L\"{o}b's Theorem has been exhibited that can be applied to algorithms which read and write proofs using bounded computational resources, such as formal verification software.  This result, in turn, can be used by algorithmic agents that have access to one another's source codes to achieve cooperative outcomes (among other things) that out-perform classical Nash equilibria and correlated equilibria, via conditions that are much more robust than previously known examples depending on program equality \citep{Tennenholtz:2004:Program}.
 
-As a direction for potential future investigation, it seems inevitable that other agents described in the purely logical (non-computable) setting of  B\'{a}r\'{a}sz and LaVictoire et al.~\cite{Barasz:2014:RobustCooperation}\cite{LaVictoire:2014:PrisDilemmaLob} will likely have bounded, algorithmic analogs, and that many more general consequences of L\"{o}b's Theorem---perhaps all the theorems of G\"{o}del--L\"{o}b provability logic---will have resource-bounded analogs as well.
+As a direction for potential future investigation, it seems inevitable that other agents described in the purely logical (non-computable) setting of  B\'{a}r\'{a}sz~\citeyear{Barasz:2014:robust} and LaVictoire et al.~\citeyear{LaVictoire:2014:program} will likely have bounded, algorithmic analogs, and that many more general consequences of L\"{o}b's Theorem---perhaps all the theorems of G\"{o}del--L\"{o}b provability logic---will have resource-bounded analogs as well.
 
 \appendix
 
 \section{Inspiration: a modal proof of L\"{o}b's Theorem}
 
-The proof of our bounded version of L\"{o}b's Theorem is analogous to a modal proof of L\"{o}b's original theorem using a few simple properties of $\Box$, along with the classical Diagonal Lemma~\cite{Carnap:1934}.\footnote{Thanks to Professor Leo Harrington for the advice to include this proof as a way of motivating the remainder of the paper.}
+The proof of our bounded version of L\"{o}b's Theorem is analogous to a modal proof of L\"{o}b's original theorem using a few simple properties of $\Box$, along with the classical Diagonal Lemma~\citep{Carnap:1934}.\footnote{Thanks to Professor Leo Harrington for the advice to include this proof as a way of motivating the remainder of the paper.}
 
 \begin{itemize}
 \item {\bf Necessitation:} From $\vdash A$ conclude $\vdash \Box A$: Informally, this says that if A is a theorem, then it is provable.
@@ -529,7 +559,7 @@ Define $F(x) \in \Lang_1(\PA)$ by $F(\qquote\psi) = (\Box \psi \rightarrow p)$ f
 
 \section{String abbreviations in proofs}
 
-In section \ref{sec:system}, we required that our proof system allow the definition and use of abbreviations, because real-world proof systems (such as MetaMath \cite{Megill:2007}) do this, and because it makes our analysis easier.  Abbreviations are just string substitutions which must be replaced by their previously defined values when reading a proof.  For the sake of concreteness, we illustrate this with an example.
+In section \ref{sec:system}, we required that our proof system allow the definition and use of abbreviations, because real-world proof systems (such as MetaMath \citep{Megill:2007}) do this, and because it makes our analysis easier.  Abbreviations are just string substitutions which must be replaced by their previously defined values when reading a proof.  For the sake of concreteness, we illustrate this with an example.
 
 Recall the axioms of Peano Arithmetic in first-order logic (FOL):
 \begin{align*}
@@ -569,7 +599,7 @@ $A(z) = ((x + y) + z = x + (y + z))$:
 &\forall x \forall y \forall z ((x + y) + z = x + (y + z))
 \end{flalign}
 
-Part of this proof can be made slightly shorter (in characters) using an abbreviation; see below.  An abbreviation, as it is meant here, is nothing more than a literal string to be replaced by another string upon reading and checking the proof; it has no particular type or grammatical role in the proof language aside from that.  If we chose to give more structure to the types of abbreviations that are allowed, we could make the checking of our proofs more efficient, and indeed, this is done in real-world proof systems like MetaMath \cite{Megill:2007}.  This restriction is not needed for the proofs in this paper, however, so we allow abbreviations to be any literal string substitution for simplicity.
+Part of this proof can be made slightly shorter (in characters) using an abbreviation; see below.  An abbreviation, as it is meant here, is nothing more than a literal string to be replaced by another string upon reading and checking the proof; it has no particular type or grammatical role in the proof language aside from that.  If we chose to give more structure to the types of abbreviations that are allowed, we could make the checking of our proofs more efficient, and indeed, this is done in real-world proof systems like MetaMath \citep{Megill:2007}.  This restriction is not needed for the proofs in this paper, however, so we allow abbreviations to be any literal string substitution for simplicity.
 
 Here is essentially the same proof as a above, using an abbreviation, ``$\%HYP$", defined 
 on the third line of the proof:
@@ -593,13 +623,15 @@ on the third line of the proof:
 &\label{apf:e}S(y+z) = y+Sz\\
 &\nonumber\textrm{By FOL (substitution of \ref{apf:e} in \ref{apf:d}):}\\
 &\label{apf:f}S(x+(y+z)) = x + (y + Sz)\\
-&\nonumber\textrm{By FOL (substitution of \ref{apf:f} in \ref{paf:c2}):}\\
+&\nonumber\textrm{By FOL (substitution of \ref{apf:f} in \ref{apf:c2}):}\\
 &\label{apf:g}\%HYP \implies (x+y) + Sz = x + (y + Sz)\\
 &\nonumber\textrm{By Ind(A(z)) from \ref{apf:g}:}\\
 &\forall x \forall y \forall z ((x + y) + z = x + (y + z))
 \end{flalign}
 
 
-\printbibliography
+%Bibliography
+\bibliographystyle{asl}
+\bibliography{bibliography}
 
 \end{document}
